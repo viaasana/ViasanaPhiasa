@@ -1,0 +1,62 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "userName": "Viasana",
+    "password": "30062005"
+}
+
+###login
+POST  http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "userName": "Viasana",
+    "password": "30062005"
+}
+
+###add chapter test
+POST http://localhost:5000/courses/post
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmIzMTJkZTgwYjEzYTVhNzJjZjRhOGQiLCJpYXQiOjE3MjMwMTE4MDZ9.wkMQCBDVgWOIpgPqkAdsxaVtXdQoSdLzz8H5FFQxEs4
+
+{
+    "VietnameseName": "Chapter 1: Phu Am",
+    "KhmerName": "ជំពូកទី 1: ព្យញ្ជនៈ",
+    "EnglishName": "Chapter 1: Consonant"
+}
+
+###add lesson test
+POST http://localhost:5000/courses/chapter/66b3191814491628325d1e5e/post
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmIzMTJkZTgwYjEzYTVhNzJjZjRhOGQiLCJpYXQiOjE3MjMwMTE4MDZ9.wkMQCBDVgWOIpgPqkAdsxaVtXdQoSdLzz8H5FFQxEs4
+
+{
+    "VietnameseName": "Bài 1: 1-5",
+    "KhmerName": "មេរៀន 1: 1-5",
+    "EnglishName": "Lesson 1: 1-5"
+}
+
+###add letter test
+POST http://localhost:5000/courses/chapter/66b3191814491628325d1e5e/lesson/66b3191814491628325d1e5e/post
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmIzMTJkZTgwYjEzYTVhNzJjZjRhOGQiLCJpYXQiOjE3MjMwMTE4MDZ9.wkMQCBDVgWOIpgPqkAdsxaVtXdQoSdLzz8H5FFQxEs4
+
+{
+    "VietnameseName": "1",
+    "KhmerName": "1",
+    "EnglishName": "1"
+}
+
+
+###add video test
+POST http://localhost:5000/courses/chapter/66b3191814491628325d1e5e/lesson/66b3191814491628325d1e5e/66b3191814491628325d1e5e/uploadvideo
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmIzMTJkZTgwYjEzYTVhNzJjZjRhOGQiLCJpYXQiOjE3MjMwMTE4MDZ9.wkMQCBDVgWOIpgPqkAdsxaVtXdQoSdLzz8H5FFQxEs4
+
+{
+    "VietnameseName": "Video huong dan viet so 1",
+    "KhmerName": "ការសរសេរការណែនាំវីដេអូលេខ 1",
+    "EnglishName": "Writing instruction video number 1",
+    "path": "D:/Tu Luyen Chu Viet Tieng Khmer Nam Bo/data/video/number/1.mp4"
+}
