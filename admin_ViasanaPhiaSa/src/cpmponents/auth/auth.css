@@ -1,0 +1,116 @@
+.auth-box{
+    background-color: #26A2EF;
+    width: 70%;
+    display: flex;
+}
+
+.login-box {
+    background-color: #cce7f5;
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+form{
+    width: 60%;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    width: 100%;
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 24px;
+}
+
+.input-group a{
+    font-size: 50px;
+    color: #000;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 24px;
+    border:none;
+    box-sizing: border-box;
+    background-color: unset;
+    color: black;
+    font-size: 25px;
+}
+
+.input-group input:focus{
+    border: unset;
+    outline: none;
+}
+
+.input-group:focus-within{
+    outline: 1px solid #000;
+}
+
+
+.login-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #36a2ff;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+}
+
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+    text-decoration: none;
+}
+
+.register-box {
+    background-color: #26A2EF;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
+    text-align: center;
+}
+
+.register-box .pencil-icon {
+    width: 70%;
+    height: auto;
+    background-size: cover;
+
+}
+
+.register-btn {
+    padding: 10px 30px;
+    background-color: #cce7f5;
+    color: #000;
+    border: none;
+    border-radius: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+    margin-bottom: 25px;
+}

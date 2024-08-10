@@ -1,0 +1,57 @@
+/* Basic styling for the card */
+.card {
+    width: 250px;
+    height: 250px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    position: relative;
+}
+
+/* Styling for the card content */
+.card-content {
+    position: absolute;
+    top:50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-content{
+    transform: translateY(-50%);
+}
+
+/* Styling for the card name */
+.cardTitle {
+    padding-top: 20px;
+    font-size: 1.7em;
+    color: #333;
+}
+
+/* Styling for the card status */
+.cardStatus {
+    margin: 4px 0 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Styling for the delete button */
+.card-delete-button {
+    position: absolute;
+    bottom: 0px;
+    background-color: #ff4d4d;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    right: 0px;
+}
+
+.card-delete-button:hover {
+    background-color: #ff3333;
+}

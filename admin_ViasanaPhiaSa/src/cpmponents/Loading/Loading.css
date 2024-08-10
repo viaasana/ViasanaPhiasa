@@ -1,0 +1,49 @@
+.loading{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .text{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        animation: anim 5s linear infinite ;
+        span{
+            position: absolute;
+            color: #26A2EF;
+            font-size: 40px;
+            left: 50%;
+            transform-origin: 0 150px;
+            text-shadow: 3px 3px black;
+        }
+    }
+    .tiltle{
+        font-size: 30px;
+    }
+    
+}
+
+.loading{
+    transform: translate(-50%, -50%);
+    transform: rotate();
+}
+
+@keyframes anim {
+    0%{
+        transform: rotate(0deg);
+    }
+    30%{
+        transform: rotate(200deg);
+    }
+    40%{
+        transform: rotate(150deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

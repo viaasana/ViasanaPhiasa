@@ -1,0 +1,50 @@
+.dataTap{
+    height: 100%;
+    .TapTitle{
+        font: roboto;
+        font-weight: bold;
+        font-size: 35px;
+        margin: 30px;
+    }
+    span{
+        font: roboto;
+        font-weight: light;
+        font-size: 32px;
+        margin-left: 50px;
+    }
+    .list{
+        overflow-y: scroll;
+        max-height: 500px;
+        
+        .cardsList{
+            .column{
+                height: 250px;
+                float: left;
+                margin: 10px 10px;
+            }
+            .addBar{
+                width: 250px;
+                height: 250px;
+                background-color: unset;
+                border-radius: 10px;
+                cursor: pointer;
+                border: 1px solid black;
+                opacity: 50%;
+            }
+        }
+    }
+    .list::-webkit-scrollbar {
+        width: 12px; /* Width of the entire scrollbar */
+        height: 12px; /* Height of the entire scrollbar */
+    }
+    
+    .list::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Background of the scrollbar track */
+        border-radius: 10px; /* Rounded corners of the track */
+    }
+    
+    .list::-webkit-scrollbar-thumb {
+        background: #888; /* Color of the scrollbar thumb */
+        border-radius: 10px; /* Rounded corners of the thumb */
+    }
+}

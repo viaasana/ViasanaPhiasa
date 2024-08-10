@@ -54,7 +54,6 @@ router.post("/register", async (req, res) => {
 //  @access Public
 router.post("/login", async (req, res) => {
   const { userName, password } = req.body
-  console.log(userName, password)
   if (!userName || !password)
     return res
       .status(400)
@@ -64,9 +63,9 @@ router.post("/login", async (req, res) => {
     //check if existing user
     const user = await User.findOne({ userName: userName });
     if (!user)
-      return res.json({
+      return res.status(401).json({
         success: false,
-        mesage: "Incorrect user name or password!",
+        message: "Incorrect user name or password!",
       });
 
     //check password
@@ -85,7 +84,7 @@ router.post("/login", async (req, res) => {
     res.json({ success: true, message: "User login successfully" , accessToken});
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ success: false, mesage: { error } });
+    return res.status(400).json({ success: false, message: { error } });
   }
 });
 
