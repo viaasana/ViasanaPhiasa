@@ -1,11 +1,4 @@
-// require("dotenv").config();
-// const express = require("express");
-// const router = express.Router();
-// const Chapter = require("../module/chapter");
-// const texContents = require("../module/textContent");
-// const verifyToken = require("../middleware/auth");
-// const lesson = require("./lessons")
-// const axios = require("axios")
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -23,14 +16,14 @@ import axios from 'axios';
 // @access private
 
 
-router.get("/", verifyToken, async(req, res)=>{
+router.get("/", verifyToken, async (req, res) => {
 
     try {
         const chapters = await Chapter.find()
-        return res.status(200).json({success: true, chapters})
+        return res.status(200).json({ success: true, chapters })
     } catch (error) {
         console.log(error)
-        return res.status(400).json({success: false, mesage: error})
+        return res.status(400).json({ success: false, mesage: error })
     }
 })
 // @route POST chapter/post
@@ -45,13 +38,12 @@ router.post("/post", verifyToken, async (req, res) => {
             .json({ success: false, mesage: "Name in all languages are required" });
 
     //check if existing chapter with this name
-    const nameCheck =await textContents.findOne({Vietnamese: VietnameseName, Khmer: KhmerName, English: EnglishName})
+    const nameCheck = await textContents.findOne({ Vietnamese: VietnameseName, Khmer: KhmerName, English: EnglishName })
 
-    if(nameCheck)
-    {
+    if (nameCheck) {
         return res
             .status(400)
-            .json({success: false, mesage: "This name already taken"})
+            .json({ success: false, mesage: "This name already taken" })
     }
 
     // add name colection
@@ -64,37 +56,37 @@ router.post("/post", verifyToken, async (req, res) => {
     try {
 
         const newChapter = new Chapter({
-        name: newName.id,
+            name: newName.id,
         });
 
         await newChapter.save();
 
         return res
-                .status(200)
-                .json({ success: true, mesage: "New chapter added successfully",id: newChapter.id });
+            .status(200)
+            .json({ success: true, mesage: "New chapter added successfully", id: newChapter.id });
     } catch (error) {
         console.log(error);
-        await textContents.deleteOne({id: newName.id})
+        await textContents.deleteOne({ id: newName.id })
         return res
-                .status(400)
-                .json({ success: false, mesage: "Chapter added unsuccessfully" });
+            .status(400)
+            .json({ success: false, mesage: "Chapter added unsuccessfully" });
     }
 });
 
 // @route DELETE chapter/post
 // @desc Delete one chapter
 // @access private
-router.delete("/",verifyToken, async(req, res)=>{
-    const {chapterId} = req.body
+router.delete("/", verifyToken, async (req, res) => {
+    const { chapterId } = req.body
     const deleteChapter = await Chapter.findById(chapterId)
     try {
         await axios.delete(`/${chapterId}`)
-        await textContents.findById(deleteChapter.name)
+        await textContents.findByIdAndDelete(deleteChapter.name)
         await Chapter.findByIdAndDelete(chapterId)
-        return res.status(200).json({success: true, mesage: "Delete successfully"})
+        return res.status(200).json({ success: true, mesage: "Delete successfully" })
     } catch (error) {
         console.log(error)
-        return res.status(400).json({success: true, mesage: "Delete unsuccessfully"})
+        return res.status(400).json({ success: true, mesage: "Delete unsuccessfully" })
     }
 })
 

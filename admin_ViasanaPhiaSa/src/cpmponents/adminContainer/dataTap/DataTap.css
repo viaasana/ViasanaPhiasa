@@ -1,5 +1,6 @@
 .dataTap{
     height: 100%;
+    width: 80%;
     .TapTitle{
         font: roboto;
         font-weight: bold;

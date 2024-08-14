@@ -4,8 +4,6 @@ import Card from "../../cpmponents/Card/Card"
 export default class Chapter extends Collection{
     constructor(doc){
         super(doc)
-        const data = {...doc.data()}
-        this.status = data.status
     }
 
     renderCard(openCollection){

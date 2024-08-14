@@ -1,24 +1,26 @@
-import Chapter from "./Chapter"
-import {getDocs, collection} from "firebase/firestore"
-import { db } from "../../lib/firebase"
+import { CourseContext } from "../../context/courseContext"
+import { useContext, useEffect } from "react"
 
+const ChapterList = () => {
+    const { courseState, loadChapter } = useContext(CourseContext)
 
+    useEffect(() => {
+        const fechData = async()=>{
+            await loadChapter()
+        }
+        fechData()
+    }, [])
+    let body = (
+        <>
+            <div className="TapTitle">Data {">"} chapter</div>
+            <div className="list">
+                
+            </div>
+        </>
+    )
 
-export default class ChapterList{
-    constructor(){
-        this.list = []
-    }
-
-    async getList(){
-        const Ref = collection(db, "chapters")
-        const _data = await getDocs(Ref)
-        this.list = await Promise.all(_data.docs.map(async (doc)=>{
-            const chapter = new Chapter(doc)
-            await chapter.initialize()
-            return chapter
-        }))
-    }
-
-
-
+    return <>{body}</>
 }
+
+
+export default ChapterList

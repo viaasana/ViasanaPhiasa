@@ -3,6 +3,7 @@ import logo from "../../assets/logo.png"
 import { useNavigate } from "react-router-dom"
 import { useState, useContext } from "react"
 import { AuthContext } from "../../context/authContext"
+import { toast } from "react-toastify"
 
 const Login = ({ language }) => {
 
@@ -57,18 +58,28 @@ const Login = ({ language }) => {
     const onChangeLoginForm = event => setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
 
     //onsubmit
+    const navigate = useNavigate()
+    const navigateToAdminTap = ()=>{
+        navigate("/admin")
+    }
+
+
     const login = async event => {
         event.preventDefault()
         try {
             const loginData = await loginUser(loginForm)
-
-            console.log(loginData)
+            if(loginData.success)
+            {
+                toast.success(loginData.message)
+                navigateToAdminTap() 
+            }
+            else
+                toast.error(loginData.message)
         } catch (error) {
             console.log(error)
         }
     }
     //navigate
-    const navigate = useNavigate()
     const openRegister = () => {
         navigate("/register")
     }
@@ -81,7 +92,7 @@ const Login = ({ language }) => {
                 <h1>{thisText.h1}</h1>
                 <form onSubmit={login}>
                     <div className="input-group">
-                        <a>&#9993; </a>
+                        <a>&#9993;</a>
                         <input type="email" placeholder="Email" required name="userName" value={userName} onChange={onChangeLoginForm} />
                     </div>
                     <div className="input-group">

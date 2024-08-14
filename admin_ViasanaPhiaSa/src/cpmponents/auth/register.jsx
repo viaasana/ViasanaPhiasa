@@ -3,6 +3,7 @@ import logo from "../../assets/logo.png"
 import { useNavigate } from "react-router-dom"
 import { useState, useContext } from "react"
 import { AuthContext } from "../../context/authContext"
+import { toast } from "react-toastify"
 
 const  Register = ({language})=>{
     const text = {
@@ -53,31 +54,42 @@ const  Register = ({language})=>{
     const [canRegister, setCanRegister] = useState(false)
     
     const {userName, password} = registerForm
-
+    
     const onChangeRegisterForm = (event)=>setRegisterForm({...registerForm, [event.target.name]: event.target.value})
     //check password is similar
     const checkPassword = (event)=>{
         if(event.target.value==password)
             setCanRegister(true)
-
+        
     }
-
+    
+    const navigate = useNavigate()
     //onsubmit
+    const navigateToLogin = ()=>{
+        navigate("/login")
+    }
     const register = async(event)=>{
         event.preventDefault()
         try {
             const registerData = await registerUser(registerForm)
             console.log(registerData)
+            if(registerData.success)
+            {
+                toast.success(registerData.message)
+                navigateToLogin()
+            }
+            else
+                toast.error(registerData.message)
         } catch (error) {
             console.log(error)
         }
     }
 
     //navigate
-    const navigate = useNavigate()
     const openLogin = ()=>{
         navigate("/login")
     }
+
 
     return (
     <div className="auth-box">
@@ -85,7 +97,7 @@ const  Register = ({language})=>{
             <h1>{thisText.h1}</h1>
             <form onSubmit={register}>
                 <div className="input-group">
-                    <a>&#9993; </a>
+                    <a>&#9993;</a>
                     <input type="email" placeholder="Email" required name="userName" value={userName} onChange={onChangeRegisterForm}/>
                 </div>
                 <div className="input-group">

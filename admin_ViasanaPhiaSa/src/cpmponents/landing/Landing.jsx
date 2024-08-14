@@ -1,15 +1,21 @@
 import { useNavigate } from "react-router-dom"
+import MyHeader from "../header/MyHeader"
+import MyFooter from "../footer/MyFooter"
+import { AuthContext } from "../../context/authContext"
+import { useContext } from "react"
 
 const  Landing = ()=>{
-    const navigateTo =useNavigate()
-    const handleClickButton = ()=>{
-        navigateTo("/login")
-    
-    }
+    const {authState} = useContext(AuthContext)
+    const navigate = useNavigate()
+    if(authState.isAuthenticated)
+        navigate("/admin")
     return (
     <>
-        <div>you are landing</div>
-        <button  onClick={()=>handleClickButton()}>click to login</button>
+        <MyHeader/>
+        <div className="container">
+            <div>you are landing</div>
+        </div>
+        <MyFooter/>
     </>
     )
 }
