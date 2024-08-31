@@ -13,7 +13,7 @@ import verifyToken from "../middleware/auth.js"
 //  @route GET api/auth
 // @desc Check if user loged in
 // @access Public
-router.get("/",verifyToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password")
     if (!user)

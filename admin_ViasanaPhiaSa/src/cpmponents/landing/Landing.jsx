@@ -8,7 +8,7 @@ const  Landing = ()=>{
     const {authState} = useContext(AuthContext)
     const navigate = useNavigate()
     if(authState.isAuthenticated)
-        navigate("/admin")
+        return navigate("/admin")
     return (
     <>
         <MyHeader/>

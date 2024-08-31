@@ -1,27 +1,37 @@
-import {collection, query, where, getDocs } from "firebase/firestore"
-import { db } from "../../lib/firebase"
+import { useState, useEffect, useContext } from "react"
+import { CourseContext } from "../../context/courseContext"
 import Lesson from "./Lesson"
-import { Routes, Route } from "react-router-dom"
-import CollectionList from "../../cpmponents/ColectionList/ColectionList"
+import Loading from "../../cpmponents/Loading/Loading"
+import { useParams } from "react-router-dom"
 
+const LessonList = () => {
+    const { courseState, loadLesson } = useContext(CourseContext)
+    const [lessons, setLessons] = useState([])
+    const {chapterId} = useParams()
+    useEffect(() => {
+        const fethData = async () => {
+            await loadLesson(chapterId)
+            const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name))
+            const lessonInstances = sortedData.map(data => new Lesson(data))
+            setLessons(lessonInstances)
+        }
 
+        fethData()
+    }, [loadLesson, courseState.collection])
 
-export default class LessonList{
-    constructor(perentID){
-        this.list = []
-        this.parentId = perentID
-    }
-
-    async getList(){
-        const q = query(collection(db, "lesson"), where("parentId", "==", this.parentId))
-        const _data = await getDocs(q)
-        console.log(_data)
-        this.list = await Promise.all(_data.docs.map(async (doc)=>{
-            const lesson = new Lesson(doc)
-            await lesson.initialize()
-            return lesson
-        }))
-    }
-
-    
+    if (courseState.isLoading)
+        return <Loading />
+    return (
+        <>
+            <div className="TapTitle">Data{">"}chapterName</div>
+            <div className="list">
+                {lessons.length > 0 ? lessons.map((chapter, index) => (
+                    chapter.renderCard()
+                )) : ""}
+                <AddNewDocument />
+            </div>
+        </>
+    )
 }
+
+export default LessonList

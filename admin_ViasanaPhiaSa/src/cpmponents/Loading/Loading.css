@@ -21,9 +21,9 @@
             position: absolute;
             color: #26A2EF;
             font-size: 40px;
-            left: 50%;
             transform-origin: 0 150px;
             text-shadow: 3px 3px black;
+            left: 33%;
         }
     }
     .tiltle{

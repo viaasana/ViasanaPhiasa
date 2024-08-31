@@ -38,7 +38,10 @@ const AuthContextProvider = ({ children }) => {
         }
     }   
     useEffect(()=>{
-        loadUser()
+        const func = async ()=>{
+            await loadUser()
+        }
+        func()
     }, [])
     //login
     const loginUser = async userForm => {

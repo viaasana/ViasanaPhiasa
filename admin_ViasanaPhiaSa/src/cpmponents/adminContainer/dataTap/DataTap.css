@@ -1,6 +1,7 @@
 .dataTap{
     height: 100%;
     width: 80%;
+    padding-left: 10px;
     .TapTitle{
         font: roboto;
         font-weight: bold;
@@ -15,24 +16,10 @@
     }
     .list{
         overflow-y: scroll;
-        max-height: 500px;
-        
-        .cardsList{
-            .column{
-                height: 250px;
-                float: left;
-                margin: 10px 10px;
-            }
-            .addBar{
-                width: 250px;
-                height: 250px;
-                background-color: unset;
-                border-radius: 10px;
-                cursor: pointer;
-                border: 1px solid black;
-                opacity: 50%;
-            }
-        }
+        height: 660px;
+        gap: 5%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
     .list::-webkit-scrollbar {
         width: 12px; /* Width of the entire scrollbar */
@@ -47,5 +34,9 @@
     .list::-webkit-scrollbar-thumb {
         background: #888; /* Color of the scrollbar thumb */
         border-radius: 10px; /* Rounded corners of the thumb */
+    }
+    .addBar {
+        width: 250px;
+        height: 250px;
     }
 }

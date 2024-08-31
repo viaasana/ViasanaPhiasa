@@ -8,7 +8,7 @@ import upload from '../upload.mjs'
 import Image from '../module/image.js'
 import Video from '../module/video.js'
 import Sound from '../module/sounds.js'
-import deleteFile from '../delete.js'
+import deleteFile from '../function/deleteFile.js'
 
 // @route POST :id/post
 // @desc add new lettter

@@ -11,7 +11,7 @@ const Loading = ()=>{
                     {
                         arrText.map((char,i)=>{
                             return(
-                                <span style={{transform: "rotate("+ (i*360/arrText.length)+ "deg)"}} >{char}</span>
+                                <span key={i} style={{transform: "rotate("+ (i*360/arrText.length)+ "deg)"}} >{char}</span>
                             )
                         })
                     }

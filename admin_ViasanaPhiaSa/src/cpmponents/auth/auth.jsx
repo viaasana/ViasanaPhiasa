@@ -12,9 +12,10 @@ const Auth = ({authRoute, language})=>{
     const isLoading = authState.authLoading
     const spinn = <div><Loading /></div>
 
+    const navigate = useNavigate()
     if(authState.isAuthenticated){
-        const navigate = useNavigate()
         navigate("/admin")
+        return (<></>)
     }
     return(
         <>

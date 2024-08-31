@@ -4,7 +4,6 @@ dotenv.config();
 import express from 'express';
 import AuthRouter from './routes/auth.js';
 import Courses from './routes/Chapter.js';
-import getText from "./routes/getText.js"
 import mongoose from 'mongoose';
 import cors from "cors"
 
@@ -34,7 +33,6 @@ app.use(express.json());
 app.use(cors())
 app.use("/api/auth", AuthRouter);
 app.use("/api/courses", Courses)
-app.use("/api/getText", getText)
 
 const PORT = 5000;
 

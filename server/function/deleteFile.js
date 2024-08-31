@@ -1,9 +1,7 @@
 import mongoose from "mongoose"
-import { GridFSBucket } from "mongodb"
-import path from "path"
+
 import dotenv from "dotenv"
-import * as fs from "fs"
-import { error } from "console"
+
 dotenv.config()
 
 

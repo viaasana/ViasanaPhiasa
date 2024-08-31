@@ -39,10 +39,10 @@
 }
 
 /* Styling for the delete button */
-.card-delete-button {
+.button {
     position: absolute;
     bottom: 0px;
-    background-color: #ff4d4d;
+    background-color: none;
     border: none;
     border-radius: 4px;
     color: white;
@@ -52,6 +52,13 @@
     right: 0px;
 }
 
+button{
+    background-color: #ddd;
+}
+
 .card-delete-button:hover {
     background-color: #ff3333;
+}
+.card-edit-button:hover {
+    background-color: #84ff32;
 }

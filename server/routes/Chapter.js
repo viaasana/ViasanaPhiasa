@@ -9,48 +9,61 @@ import Chapter from '../module/chapter.js';
 import textContents from '../module/textContent.js';
 import verifyToken from '../middleware/auth.js';
 import lesson from './lessons.js';
-import axios from 'axios';
+import Delete from '../function/delete.js';
 
-// @route GET chapter/
+// @route GET api/courses/
 // @desc get all chapter
 // @access private
 
 
 router.get("/", verifyToken, async (req, res) => {
 
+    const language = req.query.language
     try {
+        let dataReturn = []
         const chapters = await Chapter.find()
-        return res.status(200).json({ success: true, chapters })
+        await Promise.all(
+            chapters.map(async (chapter) => {
+                const name = await textContents.findById(chapter.name)
+                if (language == "VietNamese")
+                    dataReturn.push({ id: chapter.id, name: name.Vietnamese })
+                else if (language == "Khmer")
+                    dataReturn.push({ id: chapter.id, name: name.Khmer })
+                else if (language == "English")
+                    dataReturn.push({ id: chapter.id, name: name.English })
+            })
+        )
+        return res.status(200).json({ success: true, chapters: dataReturn })
     } catch (error) {
         console.log(error)
         return res.status(400).json({ success: false, mesage: error })
     }
 })
-// @route POST chapter/post
+// @route POST api/coursespost
 // @desc Create new chapter
 // @access private
 
 router.post("/post", verifyToken, async (req, res) => {
-    const { VietnameseName, KhmerName, EnglishName } = req.body;
-    if (!VietnameseName || !KhmerName || !EnglishName)
+    const { Vietnamese, Khmer, English } = req.body;
+    if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
-            .json({ success: false, mesage: "Name in all languages are required" });
+            .json({ success: false, message: "Name in all languages are required" });
 
     //check if existing chapter with this name
-    const nameCheck = await textContents.findOne({ Vietnamese: VietnameseName, Khmer: KhmerName, English: EnglishName })
+    const nameCheck = await textContents.findOne({ Vietnamese: Vietnamese, Khmer: Khmer, English: English })
 
     if (nameCheck) {
         return res
             .status(400)
-            .json({ success: false, mesage: "This name already taken" })
+            .json({ success: false, message: "This name already taken" })
     }
 
     // add name colection
     const newName = new textContents({
-        Vietnamese: VietnameseName,
-        Khmer: KhmerName,
-        English: EnglishName,
+        Vietnamese: Vietnamese,
+        Khmer: Khmer,
+        English: English,
     });
     await newName.save();
     try {
@@ -63,26 +76,25 @@ router.post("/post", verifyToken, async (req, res) => {
 
         return res
             .status(200)
-            .json({ success: true, mesage: "New chapter added successfully", id: newChapter.id });
+            .json({ success: true, message: "New chapter added successfully", id: newChapter.id });
     } catch (error) {
         console.log(error);
         await textContents.deleteOne({ id: newName.id })
         return res
             .status(400)
-            .json({ success: false, mesage: "Chapter added unsuccessfully" });
+            .json({ success: false, message: "Chapter added unsuccessfully" });
     }
 });
 
-// @route DELETE chapter/post
+// @route DELETE api/courses/delete
 // @desc Delete one chapter
 // @access private
 router.delete("/", verifyToken, async (req, res) => {
     const { chapterId } = req.body
+
     const deleteChapter = await Chapter.findById(chapterId)
     try {
-        await axios.delete(`/${chapterId}`)
-        await textContents.findByIdAndDelete(deleteChapter.name)
-        await Chapter.findByIdAndDelete(chapterId)
+        await Delete("Chapter", chapterId)
         return res.status(200).json({ success: true, mesage: "Delete successfully" })
     } catch (error) {
         console.log(error)
