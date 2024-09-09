@@ -6,21 +6,19 @@ import Loading from "../../cpmponents/Loading/Loading";
 import { useNavigate } from "react-router-dom";
 
 const ChapterList = () => {
-    const { courseState, loadChapter } = useContext(CourseContext);
+    const { courseState, loadChapter,setIsLoading } = useContext(CourseContext);
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
     useEffect(() => {
         const fetchData = async () => {
             await loadChapter();
             const sortedData = [...courseState.colection].sort((a, b)=> a.name.localeCompare(b.name));
-            const chapterInstances = sortedData.map(data => new Chapter(data, navigate));
+            const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
             setChapters(chapterInstances);
         };
 
         fetchData();
-    }, [loadChapter, courseState.colection]);
-
-
+    });
     if (courseState.isLoading)
         return <Loading />;
 

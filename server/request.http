@@ -11,14 +11,14 @@ POST  http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "userName": "Viasana",
-    "password": "30062005"
+    "userName": "viasana@1",
+    "password": "123"
 }
 
 ###
 GET http://localhost:5000/api/courses/chapter/66c3aa338db7cbfd96647a3b
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmJiMTNlNTdiNTlmNTBhMDI1MGZjYTciLCJpYXQiOjE3MjM3Mzk1NTZ9.ZdkmPImSCTYgMF-c2A72qjiRYdznoS3eEIKD9m0tfuk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmJiMTNlNTdiNTlmNTBhMDI1MGZjYTciLCJpYXQiOjE3MjQzMTI5Njd9.ZmVQT4jwYyLC8hIfvPs-Uo4wnEtdk-1fi_exon0LPQM
 
 {
     "language": "VietNamese"

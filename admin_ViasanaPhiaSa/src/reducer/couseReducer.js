@@ -7,6 +7,11 @@ export const CourseReducer = (state, action) =>{
                 colection: payload,
                 isLoading: false
             }
+        case "SET_IS_LOADING":
+            return {
+                ...state,
+                isLoading: payload
+            }
         default:
             return state
     }

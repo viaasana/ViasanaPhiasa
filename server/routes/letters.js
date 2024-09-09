@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 
 import Letter from '../module/letter.js'
+import Lesson from '../module/lesson.js'
 import textContents from '../module/textContent.js'
 import verifyToken from '../middleware/auth.js'
 import upload from '../upload.mjs'
@@ -9,25 +10,25 @@ import Image from '../module/image.js'
 import Video from '../module/video.js'
 import Sound from '../module/sounds.js'
 import deleteFile from '../function/deleteFile.js'
+import Delete from '../function/delete.js'
 
 // @route POST :id/post
 // @desc add new lettter
 // @access private
 
 router.post("/:id/post", verifyToken, async (req, res) => {
-    const { VietnameseName, KhmerName, EnglishName } = req.body;
+    const { Vietnamese, Khmer, English } = req.body;
     const lesson = req.params.id
-
     //check name
-    if (!VietnameseName || !KhmerName || !EnglishName)
+    if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
-            .json({ success: false, measge: "Name in all languages are required" });
+            .json({ success: false, message: "Name in all languages are required" });
     //check lesson
     if (!lesson)
         return res
             .status(400)
-            .json({ success: false, mesage: "lesson is required" });
+            .json({ success: false, message: "lesson is required" });
 
     //check name
     const lessonCheck = await Letter.find({ lesson: lesson });
@@ -39,20 +40,23 @@ router.post("/:id/post", verifyToken, async (req, res) => {
             const V = name.Vietnamese;
             const E = name.English;
 
-            if (V == VietnameseName || K == KhmerName || E == EnglishName)
+            if (V == Vietnamese || K == Khmer || E == English)
                 return res
                     .status(400)
-                    .json({ success: false, mesage: "This name already taken" });
+                    .json({ success: false, message: "This name already taken" });
         }
     //all good
+    // add name colection
+    const newName = new textContents({
+        Vietnamese: Vietnamese,
+        Khmer: Khmer,
+        English: English,
+    });
     try {
-        // add name colection
-        const newName = new textContents({
-            Vietnamese: VietnameseName,
-            Khmer: KhmerName,
-            English: EnglishName,
-        });
         await newName.save();
+        const parent = await Lesson.findById(lesson)
+        parent.letterCount++
+        parent.save()
 
         const newLetter = new Letter({
             name: newName.id,
@@ -62,13 +66,13 @@ router.post("/:id/post", verifyToken, async (req, res) => {
         await newLetter.save();
         return res
             .status(200)
-            .json({ success: true, mesage: "New letter added successfully", id: newLetter.id });
+            .json({ success: true, message: "New letter added successfully", id: newLetter.id });
     } catch (error) {
         console.log(error);
         await textContents.deleteOne({ id: newName.id })
         return res
             .status(400)
-            .json({ success: false, mesage: "Letter added unsuccessfully" });
+            .json({ success: false, message: "Letter added unsuccessfully" });
     }
 });
 
@@ -78,9 +82,9 @@ router.post("/:id/post", verifyToken, async (req, res) => {
 // @desc Upload new file
 // @access private
 router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
-    const { VietnameseName, KhmerName, EnglishName, path } = req.body
+    const { Vietnamese, Khmer, English, path } = req.body
     const letter = req.params.letterId
-    if (!VietnameseName || !KhmerName || !EnglishName)
+    if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
             .json({ success: false, measge: "Name in all languages are required" })
@@ -93,9 +97,9 @@ router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
         const newFile = await upload(path)
 
         const newName = new textContents({
-            Vietnamese: VietnameseName,
-            Khmer: KhmerName,
-            English: EnglishName,
+            Vietnamese: Vietnamese,
+            Khmer: Khmer,
+            English: English,
         });
         await newName.save();
 
@@ -119,9 +123,9 @@ router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
 // @desc Upload new file
 // @access private
 router.post("/:id/:letterId/uploadvideo", verifyToken, async (req, res) => {
-    const { VietnameseName, KhmerName, EnglishName, path } = req.body
+    const { Vietnamese, Khmer, English, path } = req.body
     const letter = req.params.letterId
-    if (!VietnameseName || !KhmerName || !EnglishName)
+    if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
             .json({ success: false, measge: "Name in all languages are required" })
@@ -131,13 +135,13 @@ router.post("/:id/:letterId/uploadvideo", verifyToken, async (req, res) => {
             .json({ success: false, measge: "path is required" })
 
     const uploadResul = await upload(path)
-    if(!uploadResul.success)
+    if (!uploadResul.success)
         return uploadResul
     const newFile = uploadResul
     const newName = new textContents({
-        Vietnamese: VietnameseName,
-        Khmer: KhmerName,
-        English: EnglishName,
+        Vietnamese: Vietnamese,
+        Khmer: Khmer,
+        English: English,
     });
     await newName.save();
     try {
@@ -191,17 +195,56 @@ router.post("/:id/:letterId/uploadsound", verifyToken, async (req, res) => {
 // @desc Get letter from one lesson
 // @access private
 
-router.get("/:id", verifyToken, async (req, res) => {
-    const lesson = req.params.id
-    if (!lesson)
-        return res.status(400).json({ success: false, mesage: "Lesson is required" })
+router.get("/:lessonId", verifyToken, async (req, res) => {
+    const language = req.query.language
+    const lessonId = req.params.lessonId
+    if (!lessonId)
+        return res.status(400).json({ success: false, message: "Lesson id is required" })
     try {
-        const letters = await Letter.find({ lesson: lesson })
-        return res.status(200).json({ success: true, letters })
+        let dataReturn = []
+        const letters = await Letter.find({ lesson: lessonId })
+        await Promise.all(
+            letters.map(async (letter) => {
+                const name = await textContents.findById(letter.name)
+                if (language == "VietNamese")
+                    dataReturn.push({ id: letter.id, name: name.Vietnamese, lesson: lessonId })
+                else if (language == "Khmer")
+                    dataReturn.push({ id: letter.id, name: name.Khmer, lesson: lessonId })
+                else if (language == "English")
+                    dataReturn.push({ id: letter.id, name: name.English, lesson: lessonId })
+            })
+        )
+        return res.status(200).json({ success: true, letters: dataReturn })
+
     } catch (error) {
         console.log(error)
-        return res.status(400).json({ success: false, mesage: error })
+        return res.status(400).json({ success: false, message: error })
     }
+})
+// @Route Dlete lesson/:id
+// @desc Delete an letter with id
+// @access Private
+
+
+router.delete("/:letterId", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    if (!letterId)
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    const thisLetter = await Letter.findById(letterId)
+    if (thisLetter) {
+        const thisParent = await Lesson.findById(thisLetter.lesson)
+        try {
+            thisParent.letterCount--
+            await thisParent.save()
+            await Delete("Letter", letterId)
+            return res.status(200).json({ success: true, message: `Delete ${lessonId} successfully` })
+        } catch (error) {
+            return res.status(400).json({ success: false, mesage: "Delete unsuccessfully" })
+        }
+    } else {
+        return res.status(404).json({ success: false, message: "not found this letter" })
+    }
+
 })
 
 export default router

@@ -5,22 +5,36 @@ import textContents from "../module/textContent.js"
 
 
 const Delete = async (type, id) => {
-    let colection
+    let collection=null
     switch (type) {
         case "Chapter":
-            colection = await Chapter.findById(id)
-            await textContents.findByIdAndDelete(colection.name)
-            await Chapter.findByIdAndDelete(id)
-            const lessons = await Lesson.find({ chapter: id })
-            lessons.map(async (l) => {
-                await Delete("Lesson", l.id)
-            })
+            collection = await Chapter.findById(id)
+            if(collection){
+                await textContents.findByIdAndDelete(collection.name)
+                const lessons = await Lesson.find({ chapter: id })
+                await Chapter.findByIdAndDelete(id)
+                lessons.map(async (l) => {
+                    await Delete("Lesson", l.id)
+                })
+            }
             break;
         case "Lesson":
-            colection = await Lesson.findById(id)
+            collection = await Lesson.findById(id)
+            if(collection){
+                await textContents.findByIdAndDelete(collection.name)
+                const letters = await Letter.find({lesson: collection.id})
+                await Lesson.findByIdAndDelete(id)
+                letters.map(async(letter)=>{
+                    await Delete("Letter", letter.id)
+                })
+            }
             break;
         case "Letter":
-            colection = await Letter.findById(id)
+            collection = await Letter.findById(id)
+            if(collection){
+                await textContents.findByIdAndDelete(collection.name)
+                await Letter.findByIdAndDelete(id)
+            }
             break;
         default:
             break;

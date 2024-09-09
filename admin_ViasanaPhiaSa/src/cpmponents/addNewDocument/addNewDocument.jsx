@@ -1,7 +1,7 @@
-import "./GetNameForm.css"
+import "./AddNewDocument.css"
 import addingCardIamge from "../../assets/addingCard.png"
 import { useNavigate } from "react-router-dom"
-const AddNewDocument = (func)=>{
+const AddNewDocument = ()=>{
     const navigate = useNavigate()
     const handleAdding = ()=>{
         navigate("post")
@@ -9,7 +9,7 @@ const AddNewDocument = (func)=>{
 
     return(
         <>
-            <img src={addingCardIamge} alt="" className="addBar" onClick={()=>handleAdding(func)}/>
+            <img src={addingCardIamge} alt="" className="addBar" onClick={()=>handleAdding()}/>
         </>
     )
 }

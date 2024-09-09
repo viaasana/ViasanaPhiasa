@@ -5,9 +5,10 @@ import { toast } from 'react-toastify';
 import { CourseContext } from '../../context/courseContext';
 import Loading from '../Loading/Loading';
 
-const Form = ({name}) => {
+const Form = ({ name, data }) => {
+  const {chapterId, lessonId} = data
   const navigate = useNavigate()
-  const {createChapter} = useContext(CourseContext)
+  const { createChapter, createLesson, createLetter } = useContext(CourseContext)
   const [activeTab, setActiveTab] = useState('Vietnamese');
   const [posting, setPosting] = useState(false)
   const [documentData, setDocumentData] = useState({
@@ -27,32 +28,74 @@ const Form = ({name}) => {
     }));
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     // Implement submit logic here
     setPosting(true)
-    console.log('Document submitted:', documentData);
-    const addChapter = async()=>{
-      const createResponses = await createChapter(documentData)
-      console.log(createResponses)
-      if(createResponses.success)
-      {
+    const addChapter = async () => {
+      const data = {
+        Vietnamese: name + ' ' + documentData.Vietnamese,
+        Khmer: name + ' ' + documentData.name,
+        English: name + ' ' + documentData.English,
+      }
+      const createResponses = await createChapter(data)
+      if (createResponses.success) {
         toast.success(createResponses.message)
         navigate(-1)
-      }else
-      {
+      } else {
         setPosting(false)
         toast.error("Add new Chapter fail")
 
       }
     }
-    
-    if(name=="Chapter")
+
+    const addLesson = async () => {
+      const data = {
+        Vietnamese: name + ' ' + documentData.Vietnamese,
+        Khmer: name + ' ' + documentData.name,
+        English: name + ' ' + documentData.English,
+      }
+      const createResponses = await createLesson(data, chapterId)
+      if (createResponses.success) {
+        toast.success(createResponses.message)
+        navigate(-1)
+      } else {
+        setPosting(false)
+        toast.error(createResponses.message)
+      }
+    }
+
+    const addLetter = async () => {
+      const data = {
+        Vietnamese: name + ' ' + documentData.Vietnamese,
+        Khmer: name + ' ' + documentData.Khmer,
+        English: name + ' ' + documentData.English,
+      }
+      const createResponses = await createLetter(data, chapterId, lessonId)
+      if (createResponses.success) {
+        toast.success(createResponses.message)
+        navigate(-1)
+
+      }else {
+        setPosting(false)
+        toast.error(createResponses.message)
+      }
+    }
+
+    if (name == "Chapter")
       await addChapter()
+    else if (name == "Lesson")
+      await addLesson()
+    else if(name== "Letter")
+      await addLetter()
   };
 
   const handlePreview = () => {
-    // Implement preview logic here
-    console.log('Document preview:', documentData);
+    const data = {
+      Vietnamese: name + ' ' + documentData.Vietnamese,
+      Khmer: name + ' ' + documentData.name,
+      English: name + ' ' + documentData.English,
+    }
+    console.log('Document preview:', data);
   };
 
   const handleCancel = () => {
@@ -61,12 +104,12 @@ const Form = ({name}) => {
       Vietnamese: "",
       Khmer: "",
       English: "",
-  
+
     });
     navigate(-1)
   };
-  if(posting)
-    return (<Loading/>)
+  if (posting)
+    return (<Loading />)
 
   return (
     <div className="add-document" >
@@ -84,14 +127,15 @@ const Form = ({name}) => {
       </div>
       <div className="form-content">
         <div>
-          <label>Document Title ({activeTab}):</label>
-          <input
-            type="text"
-            value={documentData[activeTab]}
-            onChange={(e) =>
-              handleInputChange(activeTab, e.target.value)
-            }
-          />
+          <label>Document Title ({activeTab}):</label><br />
+          <div className="input-wrapper">
+            <span className="input-prefix">{name}</span>
+            <input
+              type="text"
+              value={documentData[activeTab]}
+              onChange={(e) => handleInputChange(activeTab, e.target.value)}
+            />
+          </div>
         </div>
       </div>
       <div className="buttons">

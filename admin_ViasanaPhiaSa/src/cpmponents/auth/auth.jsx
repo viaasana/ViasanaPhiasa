@@ -15,7 +15,6 @@ const Auth = ({authRoute, language})=>{
     const navigate = useNavigate()
     if(authState.isAuthenticated){
         navigate("/admin")
-        return (<></>)
     }
     return(
         <>

@@ -26,11 +26,11 @@ router.get("/", verifyToken, async (req, res) => {
             chapters.map(async (chapter) => {
                 const name = await textContents.findById(chapter.name)
                 if (language == "VietNamese")
-                    dataReturn.push({ id: chapter.id, name: name.Vietnamese })
+                    dataReturn.push({ id: chapter.id, name: name.Vietnamese, lessonCout: chapter.lessonCount })
                 else if (language == "Khmer")
-                    dataReturn.push({ id: chapter.id, name: name.Khmer })
+                    dataReturn.push({ id: chapter.id, name: name.Khmer, lessonCout: chapter.lessonCount })
                 else if (language == "English")
-                    dataReturn.push({ id: chapter.id, name: name.English })
+                    dataReturn.push({ id: chapter.id, name: name.English, lessonCout: chapter.lessonCount })
             })
         )
         return res.status(200).json({ success: true, chapters: dataReturn })
@@ -92,7 +92,6 @@ router.post("/post", verifyToken, async (req, res) => {
 router.delete("/", verifyToken, async (req, res) => {
     const { chapterId } = req.body
 
-    const deleteChapter = await Chapter.findById(chapterId)
     try {
         await Delete("Chapter", chapterId)
         return res.status(200).json({ success: true, mesage: "Delete successfully" })

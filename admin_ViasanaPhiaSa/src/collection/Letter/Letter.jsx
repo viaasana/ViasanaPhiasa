@@ -1,16 +1,24 @@
-import Collection from "../Collection"
 import Card from "../../cpmponents/Card/Card"
 
-export default class Letter extends Collection{
+export default class Letter{
     constructor(doc){
-        super(doc)
-        const data = {...doc.data()}
-        this.childID = data.videoId
-        this.imageID = data.videoID.length
+        this.id = doc.id
+        this.name = doc.name
+        this.lesson = doc.lesson
+        this.letter = doc.letter
     }
-    renderCard(openCollection){
+
+
+    renderCard(index){
+        const data = {id: this.id, name: this.name, lessonId: this.lesson}
         return (
-            <Card key={this.id||"undefinded!"} name={this.name||"undefined!"} status={this.status||0} onclick={{}}/>
+            <Card key={index|| this.id} 
+                    type = "Letter"
+                    index={index}
+                    collection={data}
+                    handleClick={"dang rong"}
+                    childCollectionName = "Letter"
+            />
         )
     }
 }

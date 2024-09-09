@@ -8,33 +8,37 @@ import Lesson from '../module/lesson.js';
 import textContents from '../module/textContent.js';
 import verifyToken from '../middleware/auth.js';
 import letter from './letters.js';
+import Chapter from '../module/chapter.js';
+import Delete from '../function/delete.js';
 
 
 // @route POST :id/
 // @desc get lesson with chapter id
 // @access private
 
-router.post("/:id/", verifyToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
     const language = req.query.language
     const chapterId = req.params.id
+    if (!chapterId)
+        return res.status(400).json({ success: false, message: "Chapter id is required" })
     try {
         let dataReturn = []
-        const lessons = await Lesson.find({chapter: chapterId})
+        const lessons = await Lesson.find({ chapter: chapterId })
         await Promise.all(
-            lessons.map(async(lesson)=>{
+            lessons.map(async (lesson) => {
                 const name = await textContents.findById(lesson.name)
                 if (language == "VietNamese")
-                    dataReturn.push({ id: lesson.id, name: name.Vietnamese })
+                    dataReturn.push({ id: lesson.id, name: name.Vietnamese, chapter: chapterId, letterCount: lesson.letterCount || 0 })
                 else if (language == "Khmer")
-                    dataReturn.push({ id: lesson.id, name: name.Khmer })
+                    dataReturn.push({ id: lesson.id, name: name.Khmer, chapter: chapterId, letterCount: lesson.letterCount || 0 })
                 else if (language == "English")
-                    dataReturn.push({ id: lesson.id, name: name.English })
+                    dataReturn.push({ id: lesson.id, name: name.English, chapter: chapterId, letterCount: lesson.letterCount || 0 })
             })
         )
-        return res.status(200).json({success: true, lessons: dataReturn})
+        return res.status(200).json({ success: true, lessons: dataReturn })
     } catch (error) {
         console.log(error)
-        return res.status(400).json({success: false, message: error})
+        return res.status(400).json({ success: false, message: error })
     }
 });
 
@@ -43,34 +47,65 @@ router.post("/:id/", verifyToken, async (req, res) => {
 // @desc Add new lesson
 // @access private
 
-router.get("/:id/post", verifyToken,async (req, res)=>{
+router.post("/:id/post", verifyToken, async (req, res) => {
     const chapter = req.params.id
-    if(!chapter)
-        return res.status(400).json({success: false, mesage: "Chapter is required"})
+    const { Vietnamese, Khmer, English } = req.body
+    if (!Vietnamese || !Khmer || !English)
+        return res
+            .status(400)
+            .json({ success: false, message: "Name in all languages are required" });
+    if (!chapter)
+        return res.status(400).json({ success: false, mesage: "Chapter is required" })
+
+    const nameCheck = await textContents.findOne({ Vietnamese: Vietnamese, Khmer: Khmer, English: English })
+    if (nameCheck)
+        return res
+            .status(400)
+            .json({ success: false, message: "This name already taken" })
+
+    const newName = new textContents({
+        Vietnamese: Vietnamese,
+        Khmer: Khmer,
+        English: English
+    })
+    await newName.save()
     try {
-        const lessons = await Lesson.find({chapter: chapter})
-        return res.status(200).json({success: true, lessons})
+        const newLesson = new Lesson({
+            name: newName.id,
+            chapter: chapter
+        })
+
+        await newLesson.save()
+        const parent = await Chapter.findById(chapter)
+        parent.lessonCount++
+        parent.save()
+        return res.status(200).json({ success: true, message: "Lesson added successfully" })
     } catch (error) {
         console.log(error)
-        return res.status(400).json({success: false, mesage: error})
+        return res.status(400).json({ success: false, mesage: error })
     }
 })
 
 // @route DELETE :id/
 // @desc Delete lesson with chapter id
 // @access private
-router.delete("/:id", verifyToken, async (req, res) => {
-    const { lessonId } = req.params.id
-
-    const deleteChapter = await Chapter.findById(lessonId)
-    try {
-        // //await axios.delete(`/api/Courses/chapter/${lessonId}`)
-        // await textContents.findByIdAndDelete(deleteChapter.name)
-        // await Chapter.findByIdAndDelete(lessonId)
-        return res.status(200).json({ success: true, mesage: "Delete successfully" })
-    } catch (error) {
-        console.log(error)
-        return res.status(400).json({ success: true, mesage: "Delete unsuccessfully" })
+router.delete("/:lessonId", verifyToken, async (req, res) => {
+    const lessonId = req.params.lessonId
+    const thisLesson = await Lesson.findById(lessonId)
+    if (thisLesson) {
+        const thisParent = await Chapter.findById(thisLesson.chapter)
+        try {
+            thisParent.lessonCount--
+            await thisParent.save()
+            await Delete("Lesson", lessonId)
+            console.log("lesonid:", lessonId)
+            return res.status(200).json({ success: true, mesage: `Delete ${lessonId} successfully` })
+        } catch (error) {
+            console.log(error)
+            return res.status(400).json({ success: false, mesage: "Delete unsuccessfully" })
+        }
+    } else {
+        return res.status(404).json({ success: false, mesage: "Not found this Lesson" })
     }
 })
 

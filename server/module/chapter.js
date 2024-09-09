@@ -8,7 +8,11 @@ const chapterSchema = new Schema({
         ref: 'texContents',
         required: true,
         unique: true
-    }   
+    },
+    lessonCount:{
+        type: Number,
+        default: 0,
+    }
 })
 
 const Chapter = mongoose.model('chapters', chapterSchema);

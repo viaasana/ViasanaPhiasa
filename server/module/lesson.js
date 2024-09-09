@@ -12,6 +12,10 @@ const lessonSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'chapters',
         require: true,
+    },
+    letterCount:{
+        type: Number,
+        default: 0,
     }
 })
 

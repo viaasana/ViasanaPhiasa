@@ -9,7 +9,7 @@ const AddNewChapter = () => {
 
     return (
         <div className="addingContainer">
-            <Form name="Chapter"/>
+            <Form name="Chapter" data={{}}/>
         </div>
     )
 }
