@@ -6,20 +6,39 @@ import Loading from "../../cpmponents/Loading/Loading";
 import { useNavigate } from "react-router-dom";
 
 const ChapterList = () => {
-    const { courseState, loadChapter,setIsLoading } = useContext(CourseContext);
+    const { courseState, loadChapter, setIsLoading } = useContext(CourseContext);
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
+    const [inPageLoading, setInPageLoading] = useState(courseState.isLoading)
+    const [corectColectionName, setCorectColectionName] = useState(0)
     useEffect(() => {
         const fetchData = async () => {
             await loadChapter();
-            const sortedData = [...courseState.colection].sort((a, b)=> a.name.localeCompare(b.name));
+            const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
             const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
             setChapters(chapterInstances);
         };
 
         fetchData();
-    });
-    if (courseState.isLoading)
+
+        if (Chapters[0]) {
+            const curentColectionName = Chapters[0].name.split(' ')[0]
+            if (curentColectionName != "Chapter") {
+                setInPageLoading(true)
+                setCorectColectionName(0)
+            }
+            else {
+                setCorectColectionName(corectColectionName + 1)
+                if (corectColectionName >= 10) {
+                    setInPageLoading(false)
+                    setCorectColectionName(10)
+                }
+            }
+        }
+    }, [courseState]);
+    
+
+    if (courseState.isLoading || inPageLoading)
         return <Loading />;
 
     return (

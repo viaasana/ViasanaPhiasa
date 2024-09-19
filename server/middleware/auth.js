@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
         next()
     } catch (error) {
         console.log(error)
-        return res.status(403).json({ success: false, mesage: "Unverify token" })
+        return res.status(403).json({ success: false, message: "Unverify token" })
     }
 }
 

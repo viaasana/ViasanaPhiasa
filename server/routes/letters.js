@@ -5,11 +5,10 @@ import Letter from '../module/letter.js'
 import Lesson from '../module/lesson.js'
 import textContents from '../module/textContent.js'
 import verifyToken from '../middleware/auth.js'
-import upload from '../upload.mjs'
 import Image from '../module/image.js'
 import Video from '../module/video.js'
 import Sound from '../module/sounds.js'
-import deleteFile from '../function/deleteFile.js'
+import { deleteFile, upload, getFile } from '../function/fileHandle.mjs'
 import Delete from '../function/delete.js'
 
 // @route POST :id/post
@@ -82,19 +81,19 @@ router.post("/:id/post", verifyToken, async (req, res) => {
 // @desc Upload new file
 // @access private
 router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
-    const { Vietnamese, Khmer, English, path } = req.body
+    const { Vietnamese, Khmer, English, file } = req.body
     const letter = req.params.letterId
     if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
-            .json({ success: false, measge: "Name in all languages are required" })
+            .json({ success: false, message: "Name in all languages are required" })
     if (!path)
         return res
             .status(400)
-            .json({ success: false, measge: "path is required" })
+            .json({ success: false, message: "path is required" })
 
     try {
-        const newFile = await upload(path)
+        const newFile = await upload(file)
 
         const newName = new textContents({
             Vietnamese: Vietnamese,
@@ -123,39 +122,42 @@ router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
 // @desc Upload new file
 // @access private
 router.post("/:id/:letterId/uploadvideo", verifyToken, async (req, res) => {
-    const { Vietnamese, Khmer, English, path } = req.body
+    const { Vietnamese, Khmer, English, file } = req.body
     const letter = req.params.letterId
     if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
-            .json({ success: false, measge: "Name in all languages are required" })
-    if (!path)
+            .json({ success: false, message: "Name in all languages are required" })
+    if (!file)
         return res
             .status(400)
-            .json({ success: false, measge: "path is required" })
-
-    const uploadResul = await upload(path)
-    if (!uploadResul.success)
-        return uploadResul
-    const newFile = uploadResul
-    const newName = new textContents({
-        Vietnamese: Vietnamese,
-        Khmer: Khmer,
-        English: English,
-    });
-    await newName.save();
+            .json({ success: false, message: "file is required" })
     try {
+        const uploadResul = await upload(file)
+        if (!uploadResul.success)
+            return uploadResul
+        const newFile = uploadResul
+        const newName = new textContents({
+            Vietnamese: Vietnamese,
+            Khmer: Khmer,
+            English: English,
+        });
+        await newName.save();
+        try {
 
-        const newVideo = new Video({
-            fileId: newFile.file.id,
-            description: newName.id,
-            letter: letter
-        })
-        await newVideo.save()
-        return res.status(200).json({ success: true, message: "Upload succesfully" })
+            const newVideo = new Video({
+                fileId: newFile.file.id,
+                description: newName.id,
+                letter: letter
+            })
+            await newVideo.save()
+            return res.status(200).json({ success: true, message: "Upload succesfully" })
+        } catch (error) {
+            await textContents.findByIdAndDelete(newName.id)
+            await deleteFile(newFile.file.id)
+            return res.status(400).json({ success: false, error })
+        }
     } catch (error) {
-        await textContents.findByIdAndDelete(newName.id)
-        await deleteFile(newFile.file.id)
         return res.status(400).json({ success: false, error })
     }
 
@@ -237,7 +239,7 @@ router.delete("/:letterId", verifyToken, async (req, res) => {
             thisParent.letterCount--
             await thisParent.save()
             await Delete("Letter", letterId)
-            return res.status(200).json({ success: true, message: `Delete ${lessonId} successfully` })
+            return res.status(200).json({ success: true, message: `Delete ${letterId} successfully` })
         } catch (error) {
             return res.status(400).json({ success: false, mesage: "Delete unsuccessfully" })
         }
@@ -246,5 +248,39 @@ router.delete("/:letterId", verifyToken, async (req, res) => {
     }
 
 })
+
+// @Route get lessonId/letterId
+// @Desc open letter detail
+// @access Private
+
+router.get("/:letterId/video", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    const language = req.query.language
+    if (!letterId)
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    try {
+
+        const video = await Video.findOne({ letter: letterId })
+        if(!video)
+            return res.status(200).json({success: false, message: "Video not found"})
+        const text2 = await textContents.findById(video.description)
+        let videoDsc
+        if (language == "VietNamese") {
+            videoDsc = text2.Vietnamese
+        }
+        else if (language == "Khmer") {
+            videoDsc = text2.Khmer
+        }
+        else if (language == "English") {
+            videoDsc = text2.English
+        }
+        await getFile(video.fileId, res)
+        // return res.status(200).json({ success: true, message: "Get file successfully", videoDesc: videoDsc })
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
+
 
 export default router

@@ -11,17 +11,28 @@
     div {
         width: 33%;
     }
-
-    .tiltle {
-        display: flex;
-        flex-direction: column;
-
-        .space {
-            height: 200px;
-        }
-
-        span {
+    form{
+        span{
+            width: 100%;
+            align-content: center;
             color: #003B54;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+    }
+
+    .getAudio{
+        display: block;
+        margin: 10px auto;
+        padding: 10px;
+        font-size: 1.2em;
+        input[type="file"] {
+            width: 90%;
+            height: 180px;
+            margin-top: 10px;
+            cursor: pointer;
+            background-image: url("");
+            background-size: contain;
+            background-repeat: no-repeat;
         }
     }
 
@@ -30,6 +41,7 @@
         margin: 10px auto;
         padding: 10px;
         font-size: 1.2em;
+
         input[type="file"] {
             width: 90%;
             height: 180px;
@@ -66,16 +78,13 @@
             border-radius: 10px;
         }
 
-        .submit {
-            float: right;
+        div {
 
             button {
                 padding: 10px 20px;
                 width: 100px;
                 height: 43px;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                background-color: #4caf50;
+                margin-top: 20px;
                 border-radius: 10px;
                 color: black;
                 font-size: large;
@@ -83,9 +92,26 @@
                 cursor: pointer;
                 transition: background-color 0.3s ease;
             }
-            button:hover{
+
+        }
+        .submit{
+            float: right;
+            button{
+                
+                background-color: #4caf50;
+            }
+            button:hover {
                 background-color: #45a049
             }
         }
+        .cancle{
+            button{
+                background-color: #af4c4c;
+            }
+            button:hover{
+                background-color: #af4c4cb9;
+            }
+        }
+        
     }
 }

@@ -16,11 +16,13 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/api/courses/chapter/66c3aa338db7cbfd96647a3b
+GET http://localhost:5000/api/courses/chapter/66c75c6c5f7dc62380a09bb5
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmJiMTNlNTdiNTlmNTBhMDI1MGZjYTciLCJpYXQiOjE3MjQzMTI5Njd9.ZmVQT4jwYyLC8hIfvPs-Uo4wnEtdk-1fi_exon0LPQM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmRmOWVlYzFiZGM5ZDQ4MTNjYmY4NTUiLCJpYXQiOjE3MjU5MzEyNDR9.CpVM6iBUP4WRzwW_b6WFCP2066HHlW0Rw3levTxESyQ
 
 {
     "language": "VietNamese"
 }
 
+###
+GET http://uit.edu.vn

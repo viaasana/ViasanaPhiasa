@@ -7,6 +7,8 @@ import AddNewDocument from "../../cpmponents/addNewDocument/addNewDocument"
 
 const LessonList = () => {
     const { courseState, loadLesson, setIsLoading } = useContext(CourseContext)
+    const [inPageLoading, setInPageLoading] = useState(courseState.isLoading)
+    const [corectColectionName, setCorectColectionName] = useState(0)
     const [lessons, setLessons] = useState([])
     const {chapter} = useParams()
     const [chapterId, chapterName] = chapter.split("name=")
@@ -21,9 +23,23 @@ const LessonList = () => {
         }
 
         fethData()
-    })
 
-    if (courseState.isLoading)
+        if (lessons[0]) {
+            const curentColectionName = lessons[0].name.split(' ')[0]
+            if (curentColectionName != "Lesson") {
+                setInPageLoading(true)
+                setCorectColectionName(0)
+            }
+            else {
+                setCorectColectionName(corectColectionName + 1)
+                if (corectColectionName >= 20) {
+                    setInPageLoading(false)
+                    setCorectColectionName(10)
+                }
+            }
+        }
+    }, [courseState])
+    if (courseState.isLoading || inPageLoading)
         return <Loading />
     return (
         <>

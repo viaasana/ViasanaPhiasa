@@ -12,6 +12,12 @@ export const CourseReducer = (state, action) =>{
                 ...state,
                 isLoading: payload
             }
+        case "LETTER_DETAIL_LOADED_SUCCESS":
+            console.log(payload[0])
+            return {
+                ...state,
+                video: payload[0].video
+            }
         default:
             return state
     }

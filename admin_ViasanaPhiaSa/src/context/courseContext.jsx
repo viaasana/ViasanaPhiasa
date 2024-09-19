@@ -9,7 +9,8 @@ export const CourseContext = createContext()
 const CourseContextProvider = ({ children }) => {
     const [courseState, dispatch] = useReducer(CourseReducer, {
         isLoading: true,
-        colection: []
+        colection: [],
+        video: {videoDesc: "", videoUrl: ""}
     })
     const { authState } = useContext(AuthContext)
     //load chapter
@@ -82,6 +83,34 @@ const CourseContextProvider = ({ children }) => {
         }
     }
 
+    //load detail in one letter
+    const loadDetailLetter = async (lessonId, letterId) => {
+        try {
+            const response = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
+                params: {
+                    language: "VietNamese"
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            const fileBlob = URL.createObjectURL(new Blob([response.data]));
+            if (!response.data.success)
+                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: "" , videoDesc:""} }] })
+            if (response.data.success)
+                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: fileBlob, videoDesc:"" } }] })
+            return { success: true,message: response.data.message}
+        } catch (error) {
+            if (error.response.status == 404) {
+                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: "", videoDesc:"" } }] })
+                throw error
+            }
+            if (error.response.data)
+                return error.response.data
+            return { success: false, message: error.message }
+        }
+    }
+
     //Create Chapter
     const createChapter = async (nameForm) => {
         if (authState.isAuthenticated) {
@@ -129,6 +158,37 @@ const CourseContextProvider = ({ children }) => {
             return { success: false, message: "This is private page" }
         }
     }
+
+    //uploadFile
+    const uploadFile = async (file, nameform, colectionName, chapterId, lessonId, letterId) => {
+        if (authState.isAuthenticated) {
+            const { Vietnamese, Khmer, English } = nameform
+            const data = {
+                Vietnamese: Vietnamese,
+                Khmer: Khmer,
+                English: English,
+                file: file
+            }
+            try {
+                const response = await axios.post(`${apiUrl}/courses/chapter/${chapterId}/lesson/${lessonId}/${letterId}/upload${colectionName}`, data)
+                console.log("i'm respn data:", response.data)
+                if (response.data.success)
+                    return { success: true, message: response.data.message }
+
+                return { success: false, message: response.data.message }
+            } catch (error) {
+                if (error.response) {
+                    console.log(error.response.data)
+                    return { success: false, message: error.response.data.message }
+                } else if (error.request) {
+                    return { success: false, message: "No response from server" }
+                } else
+                    return { success: false, message: error.message }
+            }
+        } else {
+            return { success: false, message: "this id private page" }
+        }
+    }
     //delete chapter
     const deleteChapter = async (chapterId) => {
         if (authState.isAuthenticated) {
@@ -159,13 +219,18 @@ const CourseContextProvider = ({ children }) => {
         }
         return { success: false, message: "This is private page" }
     }
+    //delete letter
 
-    const deteLetter = async (lessonId,letterId) => {
+    const deteLetter = async (lessonId, letterId) => {
         if (authState.isAuthenticated) {
             try {
                 const response = await axios.delete(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}`)
+                if (response.data.success)
+                    return { success: true, message: response.data.message }
+                return { success: false, message: response.data.message }
             } catch (error) {
-
+                console.log(error)
+                return { success: false, message: error }
             }
         }
     }
@@ -174,7 +239,7 @@ const CourseContextProvider = ({ children }) => {
         dispatch({ type: "SET_IS_LOADING", payload: isLoading })
     }
 
-    const courseContexData = { courseState, loadChapter, loadLesson, loadLetter, createChapter, createLesson, createLetter, deleteChapter, deleteLesson, deteLetter, setIsLoading }
+    const courseContexData = { courseState, loadChapter, loadLesson, loadLetter, loadDetailLetter, createChapter, createLesson, createLetter, deleteChapter, deleteLesson, deteLetter, setIsLoading, uploadFile }
 
 
     return (

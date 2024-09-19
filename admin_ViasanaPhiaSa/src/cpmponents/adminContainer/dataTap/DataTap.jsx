@@ -8,6 +8,7 @@ import LessonList from "../../../collection/Lesson/LessonList"
 import LetterList from "../../../collection/Letter/LetterList"
 import AddNewLetter from "../../addNewDocument/AddNewLetter"
 import AddDetailForm from "../../addNewDocument/AddDetailForm"
+import DetailLetter from "../../../collection/DetailLetter/DetailLetter"
 
 const DataTap = () => {
 
@@ -20,10 +21,9 @@ const DataTap = () => {
                     <Route path="/:chapter" element={<LessonList />} />
                     <Route path="/:chapter/post" element={<AddNewLesson />} />
                     <Route path="/:chapter/:lesson" element={<LetterList />} />
-                    {/* <Route path="/:chapter/:lesson/post" element={<AddNewLetter />} /> */}
-                    {/* test */}
-                    <Route path="/:chapter/:lesson/post" element={<AddDetailForm />} />
-                    {/* <Route path="/:chapter/:lesson/:letter/post" element={<AddDetailForm/> } /> */}
+                    <Route path="/:chapter/:lesson/post" element={<AddNewLetter />} />
+                    <Route path="/:chapter/:lesson/:letter/" element={<DetailLetter/>} />
+                    <Route path="/:chapter/:lesson/:letter/post" element={<AddDetailForm/> } />
                 </Routes>
             </div>
         </CourseContextProvider>
