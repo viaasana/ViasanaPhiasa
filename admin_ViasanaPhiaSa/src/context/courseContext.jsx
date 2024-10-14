@@ -10,7 +10,7 @@ const CourseContextProvider = ({ children }) => {
     const [courseState, dispatch] = useReducer(CourseReducer, {
         isLoading: true,
         colection: [],
-        video: {videoDesc: "", videoUrl: ""}
+        video: { videoDesc: "", videoUrl: "" }
     })
     const { authState } = useContext(AuthContext)
     //load chapter
@@ -86,7 +86,17 @@ const CourseContextProvider = ({ children }) => {
     //load detail in one letter
     const loadDetailLetter = async (lessonId, letterId) => {
         try {
-            const response = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
+            //get image file
+            const ImageResponse = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                responseType: 'blob'
+            })
+
+            const imageUrl = URL.createObjectURL(ImageResponse.data);
+            //get image desc
+            const ImgDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image/desc`, {
                 params: {
                     language: "VietNamese"
                 },
@@ -94,20 +104,46 @@ const CourseContextProvider = ({ children }) => {
                     'Content-Type': 'application/json',
                 }
             })
-            const fileBlob = URL.createObjectURL(new Blob([response.data]));
-            if (!response.data.success)
-                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: "" , videoDesc:""} }] })
-            if (response.data.success)
-                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: fileBlob, videoDesc:"" } }] })
-            return { success: true,message: response.data.message}
-        } catch (error) {
-            if (error.response.status == 404) {
-                dispatch({ type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{ video: { videoUrl: "", videoDesc:"" } }] })
-                throw error
+            //get video file
+            const videoRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                responseType: 'blob'
+            })
+            const videoUrl = URL.createObjectURL(videoRes.data)
+
+            //get video desc
+
+            //get sound
+            const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                responseType: 'blob'
+            })
+
+            const soundUrl = URL.createObjectURL(soundRes.data)
+
+            if (ImgDescRes.data.success) {
+                dispatch({
+                    type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
+                        image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
+                        video: { videoUrl: videoUrl, videoDesc: "videoDesc.data.description" },
+                        sound: {soundUrl: soundUrl}
+                    }]
+                })
+                return { success: true }
             }
-            if (error.response.data)
-                return error.response.data
-            return { success: false, message: error.message }
+            return { success: false, message: "This letter currently has no data" }
+        } catch (error) {
+            dispatch({
+                type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
+                    image: { imageUrl: '', imageDesc: "" },
+                    video: { videoUrl: '', videoDesc: "" }
+                }]
+            })
+            return { success: false, message: error.response }
         }
     }
 
@@ -163,14 +199,18 @@ const CourseContextProvider = ({ children }) => {
     const uploadFile = async (file, nameform, colectionName, chapterId, lessonId, letterId) => {
         if (authState.isAuthenticated) {
             const { Vietnamese, Khmer, English } = nameform
-            const data = {
-                Vietnamese: Vietnamese,
-                Khmer: Khmer,
-                English: English,
-                file: file
-            }
+            const data = new FormData();
+            data.append('Vietnamese', Vietnamese);
+            data.append('Khmer', Khmer);
+            data.append('English', English);
+            data.append('file', file);
+
             try {
-                const response = await axios.post(`${apiUrl}/courses/chapter/${chapterId}/lesson/${lessonId}/${letterId}/upload${colectionName}`, data)
+                const response = await axios.post(`${apiUrl}/courses/chapter/${chapterId}/lesson/${lessonId}/${letterId}/upload${colectionName}`, data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
                 console.log("i'm respn data:", response.data)
                 if (response.data.success)
                     return { success: true, message: response.data.message }

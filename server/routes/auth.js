@@ -7,7 +7,7 @@ import argon2 from "argon2"
 import jwt from "jsonwebtoken"
 import User from "../module/user.js"
 import verifyToken from "../middleware/auth.js"
-
+import Admin from "../module/admin.js"
 
 
 //  @route GET api/auth
@@ -15,7 +15,7 @@ import verifyToken from "../middleware/auth.js"
 // @access Public
 router.get("/", verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password")
+    const user = await Admin.findById(req.userId).select("-password")
     if (!user)
       return res.status(400).json({ success: false, message: "User not found" })
     return res.json({ success: true, user })
@@ -41,15 +41,15 @@ router.post("/register", async (req, res) => {
 
   try {
     //check if exiting user
-    const user = await User.findOne({ userName: userName });
+    const user = await Admin.findOne({ userName: userName });
     if (user)
       return res
         .status(400)
-        .json({ success: false, message: "User name already taken" });
+        .json({ success: false, message: "This name already taken" });
 
     //begin add user
     const hashPassword = await argon2.hash(password);
-    const newUser = new User({
+    const newUser = new Admin({
       userName: userName,
       password: hashPassword,
     });
@@ -82,7 +82,7 @@ router.post("/login", async (req, res) => {
 
   try {
     //check if existing user
-    const user = await User.findOne({ userName: userName });
+    const user = await Admin.findOne({ userName: userName });
     if (!user)
       return res.status(401).json({
         success: false,

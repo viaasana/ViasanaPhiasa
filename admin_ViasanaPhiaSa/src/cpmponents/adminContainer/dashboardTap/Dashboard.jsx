@@ -1,21 +1,79 @@
 import "./Dashboard.css"
-import {BrowserRouter as Router, Routes, Route, useNavigate} from "react-router-dom"
+import { useState, useEffect } from "react"
 
 
+const ProgressCircle = ({ percentage, lable, color }) => {
+    const [animatedPercentage, setAnimatedPercentage] = useState(0);
 
-const DashBoard = () =>{
-    const navigate = useNavigate()
-    const clickHancle = ()=>{
-        navigate("hello")
-    }
-    return(
-        <>
-         <span>hello i'm from dashboard</span>            
-        <button onClick={()=>clickHancle()}>hello</button>
-         <Routes>
-            <Route path="/hello/*" element={<h2>Hello i'm say hello page</h2>} />
-        </Routes>
-        </>
+    useEffect(() => {
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 1; 
+            setAnimatedPercentage(progress);
+
+            if (progress >= percentage) {
+                clearInterval(interval);
+            }
+        }, 10); 
+
+        return () => clearInterval(interval);
+    }, [percentage]);
+
+    const deg = 360 * percentage / 100
+
+    return (
+        <div className="progress-circle">
+            <div className="circle-content" style={{
+                background: `conic-gradient(${color} ${animatedPercentage * 3.6}deg, #e0e0e0 ${animatedPercentage * 3.6}deg)`
+            }}>
+                <span className="percentage">
+                    {percentage}%
+                </span>
+            </div>
+            <p>{lable}</p>
+        </div>
+    )
+
+
+}
+
+
+const DashBoard = () => {
+    const [statUser, setStatUser] = useState(3)
+    const [statEvent, setStatEvent] = useState(0)
+    const [statChapter, setStatChapter] = useState(1)
+
+
+    return (
+        <div className="dashboard-container">
+            <div className="title">Dashboard</div>
+            <div className="stats-container">
+                <div className="stat-item user">
+                    <span>Users: <br />{statUser}</span>
+                    <div className="icon-container">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/user-group-man-man.png" alt="users-icon" className="icon" />
+                    </div>
+                </div>
+                <div className="stat-item event">
+                    <span>Events: <br />{statEvent}</span>
+                    <div className="icon-container">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/calendar.png" alt="events-icon" className="icon" />
+                    </div>
+                </div>
+                <div className="stat-item chapter">
+                    <span>Chapters: <br />{statChapter}</span>
+                    <div className="icon-container">
+                        <img src="https://img.icons8.com/ios-filled/50/000000/book.png" alt="lessons-icon" className="icon" />
+                    </div>
+                </div>
+            </div>
+            <div className="progress-container">
+
+                <ProgressCircle percentage={30} lable="User completed" color="#6485E5" />
+                <ProgressCircle percentage={100} lable="User finish game" color="#3963DD" />
+
+            </div>
+        </div>
     )
 }
 

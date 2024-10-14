@@ -10,6 +10,11 @@ import Video from '../module/video.js'
 import Sound from '../module/sounds.js'
 import { deleteFile, upload, getFile } from '../function/fileHandle.mjs'
 import Delete from '../function/delete.js'
+import multer from 'multer';
+
+
+const storage = multer.memoryStorage(); // You can use memoryStorage or set up GridFS here
+const gridUpload = multer({ storage }).single('file');
 
 // @route POST :id/post
 // @desc add new lettter
@@ -80,21 +85,20 @@ router.post("/:id/post", verifyToken, async (req, res) => {
 // @route POST :lessonId/uploadImage
 // @desc Upload new file
 // @access private
-router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
-    const { Vietnamese, Khmer, English, file } = req.body
+router.post("/:id/:letterId/uploadimage", verifyToken, gridUpload, async (req, res) => {
+    const { Vietnamese, Khmer, English } = req.body
+    const file = req.file
     const letter = req.params.letterId
     if (!Vietnamese || !Khmer || !English)
         return res
             .status(400)
             .json({ success: false, message: "Name in all languages are required" })
-    if (!path)
+    if (!file)
         return res
             .status(400)
-            .json({ success: false, message: "path is required" })
-
+            .json({ success: false, message: "file is required" })
     try {
         const newFile = await upload(file)
-
         const newName = new textContents({
             Vietnamese: Vietnamese,
             Khmer: Khmer,
@@ -103,15 +107,13 @@ router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
         await newName.save();
 
         const newImage = new Image({
-            fileId: newFile.id,
+            fileId: newFile.file.id,
             description: newName.id,
             letter: letter
         })
         await newImage.save()
         return res.status(200).json({ success: true, message: "Upload succesfully" })
     } catch (error) {
-        await textContents.findByIdAndDelete(newName.id)
-        await Image.findByIdAndDelete(newFile.id)
         return res.status(400).json({ success: false, error })
     }
 
@@ -121,8 +123,9 @@ router.post("/:id/:letterId/uploadimage", verifyToken, async (req, res) => {
 // @route POST :lessonId/uploadvideo
 // @desc Upload new file
 // @access private
-router.post("/:id/:letterId/uploadvideo", verifyToken, async (req, res) => {
-    const { Vietnamese, Khmer, English, file } = req.body
+router.post("/:id/:letterId/uploadvideo", verifyToken, gridUpload, async (req, res) => {
+    const { Vietnamese, Khmer, English } = req.body
+    const file = req.file
     const letter = req.params.letterId
     if (!Vietnamese || !Khmer || !English)
         return res
@@ -160,35 +163,37 @@ router.post("/:id/:letterId/uploadvideo", verifyToken, async (req, res) => {
     } catch (error) {
         return res.status(400).json({ success: false, error })
     }
-
-
 })
 // @route POST :lessonId/uploadSound
 // @desc Upload new file
 // @access private
-router.post("/:id/:letterId/uploadsound", verifyToken, async (req, res) => {
-    const { path } = req.body
+router.post("/:id/:letterId/uploadsound", verifyToken, gridUpload, async (req, res) => {
+    const file = req.file
     const letter = req.params.letterId
 
-    if (!path)
+    if (!file)
         return res
             .status(400)
-            .json({ success: false, measge: "path is required" })
-
+            .json({ success: false, message: "file is required" })
     try {
-        const newFile = await upload(path)
+        const uploadResul = await upload(file)
+        if (!uploadResul.success)
+            return uploadResul
+        const newFile = uploadResul
 
+        try {
 
-        const newSound = new Sound({
-            fileId: newFile.file.id,
-            description: newName.id,
-            letter: letter
-        })
-        await newSound.save()
-        return res.status(200).json({ success: true, message: "Upload succesfully" })
+            const newSound = new Sound({
+                fileId: newFile.file.id,
+                letter: letter
+            })
+            await newSound.save()
+            return res.status(200).json({ success: true, message: "Upload succesfully" })
+        } catch (error) {
+            await deleteFile(newFile.file.id)
+            return res.status(400).json({ success: false, error })
+        }
     } catch (error) {
-        await textContents.findByIdAndDelete(newName.id)
-        await Sound.findByIdAndDelete(newFile.id)
         return res.status(400).json({ success: false, error })
     }
 
@@ -261,8 +266,8 @@ router.get("/:letterId/video", verifyToken, async (req, res) => {
     try {
 
         const video = await Video.findOne({ letter: letterId })
-        if(!video)
-            return res.status(200).json({success: false, message: "Video not found"})
+        if (!video)
+            return res.status(200).json({ success: false, message: "Video not found" })
         const text2 = await textContents.findById(video.description)
         let videoDsc
         if (language == "VietNamese") {
@@ -282,5 +287,100 @@ router.get("/:letterId/video", verifyToken, async (req, res) => {
     }
 })
 
+
+
+router.get("/:letterId/image", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    }
+    try {
+
+        const image = await Image.findOne({ letter: letterId })
+        if (!image) {
+            return res.status(404).json({ success: false, message: "Image not found" })
+        }
+        await getFile(image.fileId, res)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
+
+// @Route get lessonId/letterId/image
+// @Desc get image desc
+// @access Private
+
+router.get("/:letterId/image/desc", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    const language = req.query.language
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    }
+    if (!language)
+        return res.status(400).json({ success: false, message: "language is required" })
+    try {
+        const image = await Image.findOne({ letter: letterId })
+        if (!image)
+            return res.status(404).json({ success: false, message: "Image not found" })
+        const text = await textContents.findById(image.description)
+        let ImageDsc
+        if (language == "VietNamese") {
+            ImageDsc = text.Vietnamese
+        }
+        else if (language == "Khmer") {
+            ImageDsc = text.Khmer
+        }
+        else if (language == "English") {
+            ImageDsc = text.English
+        }
+        return res.status(200).json({ success: true, message: "desc load successfuly", description: ImageDsc })
+    } catch (error) {
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
+
+// @Route get lessonId/letterId/video
+// @Desc get video
+// @access Private
+
+router.get("/:letterId/video", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    }
+    try {
+
+        const video = await Video.findOne({ letter: letterId })
+        if (!video) {
+            return res.status(404).json({ success: false, message: "video not found" })
+        }
+        await getFile(video.fileId, res)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
+// @Route get lessonId/letterId/sound
+// @Desc get sound
+// @access Private
+
+router.get("/:letterId/sound", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    }
+    try {
+
+        const sound = await Sound.findOne({ letter: letterId })
+        if (!sound) {
+            return res.status(404).json({ success: false, message: "sound not found" })
+        }
+        await getFile(sound.fileId, res)
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
 
 export default router

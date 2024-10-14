@@ -3,16 +3,16 @@ import dotenv from "dotenv"
 import { PassThrough } from 'stream';
 dotenv.config()
 
-let gfs;
+let gfs
+
 mongoose.connection.once('open', () => {
     gfs = new mongoose.mongo.GridFSBucket(mongoose.connection.db, { bucketName: 'uploads' });
     console.log('GridFSBucket set up');
-})
+});
 
 
 async function upload(file) {
     const { originalname: fileName, buffer } = file;  // Assuming the file object has an `originalname` (file name) and `buffer` (file content)
-
     return new Promise((resolve, reject) => {
         try {
             const uploadStream = gfs.openUploadStream(fileName);
@@ -29,6 +29,7 @@ async function upload(file) {
                 reject({ success: false, message: 'from uploadFile func', err: err.message });
             });
         } catch (error) {
+            console.log(error)
             reject({ success: false, message: 'from uploadFile func', err: error.message });
         }
     });
@@ -36,6 +37,7 @@ async function upload(file) {
 }
 
 async function deleteFile(fileId, res) {
+
     try {
         return new Promise(async () => {
             const objectId = new mongoose.Types.ObjectId(fileId)
@@ -48,18 +50,18 @@ async function deleteFile(fileId, res) {
 
 async function getFile(fileId, res) {
     try {
-        gfs.files.findById(fileId, (err, file) => {
-            if (err || !file || file.length == 0) {
-                return res.status(404).json({err: "file not found" })
-            }
-            const readStream = gfs.createReadStream(file.fileName)
-            res.set('Content-Type', file.contentType);
-            readStream.pipe(res);
+        const files = await gfs.find({ _id: new mongoose.Types.ObjectId(fileId) }).toArray();
+        if (!files || files.length == 0)
+            return res.status(404).json({ err: "File not found" });
+        const file = files[0]
+        res.set('Content-Type', file.contentType);
+        const downloadStream = gfs.openDownloadStream(file._id);
+        downloadStream.pipe(res);
 
-        })
 
     } catch (error) {
-        return res.status(400).json({err: error})
+        console.log(error)
+        return res.status(400).json({ err: error })
     }
 }
 

@@ -1,0 +1,26 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    td{
+        button{
+            background-color: #ff0000;
+            border-radius: 10px;
+        }
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+}

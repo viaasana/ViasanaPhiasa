@@ -9,15 +9,16 @@ const  Landing = ()=>{
     const navigate = useNavigate()
     if(authState.isAuthenticated)
         return navigate("/admin")
-    return (
-    <>
-        <MyHeader/>
-        <div className="container">
-            <div>you are landing</div>
-        </div>
-        <MyFooter/>
-    </>
-    )
+    return navigate("/login")
+    // return (
+    // <>
+    //     <MyHeader/>
+    //     <div className="container">
+    //         <div>you are landing</div>
+    //     </div>
+    //     <MyFooter/>
+    // </>
+    // )
 }
 
 export default Landing

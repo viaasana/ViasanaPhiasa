@@ -1,5 +1,5 @@
-.MyFooter{
-    
+.MyFooter {
+
     max-width: 100%;
     height: 200px;
     background-color: #bbc9f2;
@@ -8,13 +8,15 @@
     justify-content: space-between;
     padding-left: 100px;
     padding-right: 100px;
+    margin-top: 20px;
 
-    ul{
-        li{
+    ul {
+        li {
             cursor: pointer;
             list-style: none;
             font-weight: lighter;
-            a{
+
+            a {
                 text-decoration: none;
                 color: #000000;
                 font: roboto;
@@ -22,13 +24,15 @@
                 margin-top: 100px;
             }
 
-            a:hover,button:hover{
+            a:hover,
+            button:hover {
                 text-decoration: underline;
             }
-            
-            
+
+
         }
-        span{
+
+        span {
             font: inherit;
             font-weight: bold;
             font-size: 18px;

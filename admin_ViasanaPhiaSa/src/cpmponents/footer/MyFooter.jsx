@@ -5,20 +5,21 @@ const MyFooter = () =>{
     return (
         <div className="MyFooter">
             <ul>
-                <span>Thông tin</span>
-                <li><a href="">Lộ trình học</a></li>
+                <span>Information</span>
+                <li><a href="">Learning Path</a></li>
                 <li><a href="">Video</a></li>
-                <li><a href="">Âm thanh</a></li>
+                <li><a href="">Audio</a></li>
             </ul>
 
             <ul>
-                <span>Đóng góp</span>
-                <li><a href="">Gửi video</a></li>
-                <li><a href="">Gửi từ vựng</a></li>
+                <span>Contribute</span>
+                <li><a href="">Submit Video</a></li>
+                <li><a href="">Submit Vocabulary
+                </a></li>
             </ul>
 
             <ul>
-                <span>Liên hệ</span>
+                <span>Contact</span>
                 <li><a href="">23520966@gm.uit.edu.vn</a></li>
             </ul>
         </div>

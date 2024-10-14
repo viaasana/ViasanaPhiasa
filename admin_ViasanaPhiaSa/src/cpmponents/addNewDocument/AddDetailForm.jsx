@@ -16,6 +16,7 @@ const AddDetailForm = () => {
     const [dataInput, setDataInput] = useState({
         video: "",
         image: "",
+        sound: "",
         ImageDiscriptionVietnam: "",
         ImageDiscriptionKhmer: "",
         ImageDiscriptionEnglish: "",
@@ -35,14 +36,19 @@ const AddDetailForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        
+        const VideoNameForm = {Vietnamese: dataInput.VideoDiscriptionVietnam, Khmer: dataInput.VideoDiscriptionKhmer, English: dataInput.VideoDiscriptionEnglish}
+        const res2 = await uploadFile(dataInput.video, VideoNameForm, "video", chapterId, lessonId, letterId)
 
-        const nameForm = { Vietnamese: dataInput.ImageDiscriptionVietnam, Khmer: dataInput.ImageDiscriptionKhmer, English: dataInput.ImageDiscriptionEnglish }
-        const res = await uploadFile(dataInput.video, nameForm, "video", chapterId, lessonId, letterId)
-        console.log(res)
-        if (res.success)
-            toast.success(res.message)
+        const ImageNameForm = { Vietnamese: dataInput.ImageDiscriptionVietnam, Khmer: dataInput.ImageDiscriptionKhmer, English: dataInput.ImageDiscriptionEnglish }
+        const res1 = await uploadFile(dataInput.image, ImageNameForm, "image", chapterId, lessonId, letterId)
+        
+        const res3 = await uploadFile(dataInput.sound, ImageNameForm, "sound", chapterId, lessonId, letterId)
+
+        if (res2.success && res1.success && res3.success)
+            toast.success(res3.message)
         else
-            toast.error(res.message)
+            toast.error( (!res2.success && res2.message) || (!res1.success && res1.message) || (!res3.success && res3.message))
     }
 
     const handleCancel = (e) => {
@@ -57,7 +63,7 @@ const AddDetailForm = () => {
             <div className="AddDetailContainer">
                 <form className="getAudio">
                     <span>Upload audio</span>
-                    <input type="file" accept="audio/*;capture=microphone" />
+                    <input type="file" accept="audio/*;capture=microphone" onChange={(e) => handleInputChange("sound", e.target.files[0])}/>
                 </form>
                 <form className="getVideo">
                     <span>Upload video</span>

@@ -23,10 +23,10 @@ const Controller = ()=>{
             </div>
             <div className="taps">
                 <div className="tap tap-dashboard" style={(index==0)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/")}>Dashboard</div>
-                <div className="tap tap-User" style={(index==1)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/user")}>User</div>
+                <div className="tap tap-User" style={(index==1)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/user")}>Users</div>
                 <div  className="tap tap-Data" style={(index==2)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/data")}>Data</div>
-                <div to="/User_contribute" className="tap tap-contribute" style={(index==3)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/user_contribute")}>User contribute</div>
-                <div to="/Event" className="tap tap-Event" style={(index==4)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/event")}>Event</div>
+                <div to="/User_contribute" className="tap tap-contribute" style={(index==3)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/user_contribute")}>User's contributions</div>
+                <div to="/Event" className="tap tap-Event" style={(index==4)?{backgroundColor: "#26A2EF"}:{backgroundColor: "unset"}} onClick={() => handleActiveTap("/admin/event")}>Events</div>
             </div>
         </div>
     )

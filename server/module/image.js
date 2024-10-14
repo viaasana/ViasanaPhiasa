@@ -14,6 +14,7 @@ const imageSchema = new Schema({
     letter: {
         type: mongoose.Types.ObjectId
     }
+    
 })
 
 const Image = mongoose.model("images", imageSchema);
