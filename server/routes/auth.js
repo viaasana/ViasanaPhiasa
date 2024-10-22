@@ -5,7 +5,6 @@ import express from "express"
 const router = express.Router()
 import argon2 from "argon2"
 import jwt from "jsonwebtoken"
-import User from "../module/user.js"
 import verifyToken from "../middleware/auth.js"
 import Admin from "../module/admin.js"
 

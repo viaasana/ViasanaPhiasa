@@ -6,7 +6,7 @@ import AuthRouter from './routes/auth.js';
 import Courses from './routes/Chapter.js';
 import mongoose from 'mongoose';
 import cors from "cors"
-
+import UserAuthRouter from './routes/userAuth.js'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@viasanaphiasa.sqhkgy4.mongodb.net/?retryWrites=true&w=majority&appName=ViasanaPhiasa`;
 
@@ -35,7 +35,7 @@ const startServer = () => {
     // Define routes
     app.use('/api/auth', AuthRouter);
     app.use('/api/courses', Courses);
-
+    app.use('/api/userAuthRouter', UserAuthRouter)
     const PORT = 5000;
 
     app.listen(PORT, () => {

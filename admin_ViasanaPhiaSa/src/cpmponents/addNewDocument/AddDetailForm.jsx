@@ -82,7 +82,7 @@ const AddDetailForm = () => {
                         <button name="submit" className="submit" onClick={(e) => handleSubmit(e)}>Submit</button>
                     </div>
                     <div className="cancle">
-                        <button name="cancle" className="cancle" onClick={(e) => handleCancel(e)}>Cancle</button>
+                        <button name="cancle" className="cancle" onClick={(e) => handleCancel(e)}>Cancel</button>
                     </div>
                 </form>
             </div>
