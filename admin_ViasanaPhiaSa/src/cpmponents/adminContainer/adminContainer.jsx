@@ -15,7 +15,7 @@ import { ProtectedRoute } from "../routing/protectedRoute"
 const AdminContainer =() =>{
     
     
-    ProtectedRoute()//check if already login
+    ProtectedRoute()
 
 
     return (

@@ -13,7 +13,6 @@ const Auth = ({authRoute, language, isHeaderAndFooter})=>{
     const spinn = <div><Loading /></div>
 
     const navigate = useNavigate()
-    console.log(authState)
     if(authState.isAuthenticated){
         navigate("/course")
     }

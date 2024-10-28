@@ -5,39 +5,42 @@ import Auth from "./component/auth/auth"
 import { useState } from "react"
 import Notification from "./component/notification/Notification"
 import PageNotFound from "./Routes/pageNotfound/notFoundPage"
-import Course from "./Routes/Courses/Courses"
+import CourseRoute from "./Routes/Courses/Courses"
+import CourseContextProvider from "./context/courseContext"
 
 function App() {
   const [language, setLanguage] = useState("Vietnamese")
   return (
     <AuthContextProvider>
-      <Router>
-        <Routes>
-          <Route exact path="/" Component={Landing} />
-          <Route
-            exact
-            path="/login"
-            element={<Auth authRoute="login" language={language} isHeaderAndFooter={true}/>}
-          />
-          <Route
-            exact
-            path="/register"
-            element={<Auth authRoute="register" language={language} isHeaderAndFooter={true}/>}
-          />
+      <CourseContextProvider>
+        <Router>
+          <Routes>
+            <Route exact path="/" Component={Landing} />
+            <Route
+              exact
+              path="/login"
+              element={<Auth authRoute="login" language={language} isHeaderAndFooter={true} />}
+            />
+            <Route
+              exact
+              path="/register"
+              element={<Auth authRoute="register" language={language} isHeaderAndFooter={true} />}
+            />
 
-          <Route
-            exact
-            path="/course"
-            element={<Course/>}
-          />
-          <Route
-            exact
-            path="*"
-            element={<PageNotFound />}
-          />
-        </Routes>
-      </Router>
-      <Notification/>
+            <Route
+              exact
+              path="/course/*"
+              element={<CourseRoute />}
+            />
+            <Route
+              exact
+              path="*"
+              element={<PageNotFound />}
+            />
+          </Routes>
+        </Router>
+        <Notification />
+      </CourseContextProvider>
     </AuthContextProvider>
   )
 }
