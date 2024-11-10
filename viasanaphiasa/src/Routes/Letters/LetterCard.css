@@ -1,0 +1,114 @@
+.Letter-card-container {
+    width: 70%;
+    min-height: 60vh;
+    height: max-content;
+    margin: 0 auto;
+
+    .learning-box {
+        min-height: 80%;
+        height: max-content;
+        display: flex;
+        /* Change to flexbox for better centering */
+        justify-content: center;
+        /* Center items horizontally */
+        align-items: center;
+        /* Center items vertically if needed */
+        flex-wrap: wrap;
+        /* Allow items to wrap if they exceed the width */
+
+        .video-container {
+            display: flex;
+            /* Flexbox for inner alignment if needed */
+            flex-direction: column;
+            /* Column layout to center video */
+            border: 1px solid black;
+            width: 700px;
+            height: 500px;
+            border-radius: 54px;
+            margin: 10px;
+            text-align: center;
+
+            video {
+                width: 80%;
+                height: 80%;
+                border-radius: 20px;
+                margin: 0 auto;
+            }
+
+            span {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 20px;
+                font-weight: normal;
+            }
+        }
+
+        .image-container {
+            display: flex;
+            /* Flexbox for inner alignment if needed */
+            flex-direction: column;
+            /* Column layout to center image */
+            border: 1px solid black;
+            width: 500px;
+            margin: 10px;
+            height: 500px;
+            border-radius: 54px;
+            text-align: center;
+            align-items: center;
+            /* Center image inside container */
+
+            img {
+                width: 80%;
+                height: 80%;
+                border-radius: 20px;
+                scale: .7;
+                /* Note: scale is not a valid property for images, use transform instead */
+                transform: scale(0.7);
+                /* Use transform to scale the image */
+            }
+
+            span {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 20px;
+                font-weight: normal;
+            }
+        }
+    }
+
+
+    .controler-box {
+        height: 50px;
+        display: flex;
+        gap: 10px;
+
+        .buttonBox {
+            height: 80%;
+            border-radius: 10px;
+            flex: 1;
+            background-color: #D9D9D9;
+            align-content: center;
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 30px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+    }
+
+    .state-box {
+        height: 10px;
+        display: flex;
+        flex-direction: row;
+
+        .stateBar {
+            flex: 1;
+            height: 10px;
+            background-color: #D9D9D9;
+            border-radius: 10px;
+            border: 1px solid black;
+        }
+
+        .learned {
+            background-color: #26A2EF;
+        }
+    }
+}

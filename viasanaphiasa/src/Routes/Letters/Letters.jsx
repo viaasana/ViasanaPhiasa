@@ -1,29 +1,28 @@
-import "./Course.css"
+import "./Letters.css"
 import { CourseContext } from "../../context/courseContext"
 import { useContext, useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Loading from "../../component/Loading/Loading"
-import Chapter from "./Chapter"
+import Letter from "./Letter"
 import { AuthContext } from "../../context/authContext"
 
-const CourseContainer = () => {
-    const Taptitle_text = { Vietnamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
-    const { courseState, loadChapter, setIsLoading, setLanguage } = useContext(CourseContext);
+const LetterRoute = () => {
+    const { courseState,loadLetter, setIsLoading, setLanguage } = useContext(CourseContext);
     const {authState} = useContext(AuthContext)
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
+    const {chapter, lesson} = useParams()
+    const [chapterId, chapterName] = chapter.split("name=")
+    const [lessonId, lessonname] = lesson.split("name=")
 
     useEffect(() => {
 
         const fetchData = async () => {
-            console.log(courseState.language)
-            await loadChapter(courseState.language);
-            console.log(courseState.colection)
+            await loadLetter(chapterId, lessonId);
             const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
-            const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
+            const chapterInstances = sortedData.map(data => new Letter(data));
             setChapters(chapterInstances);
         };
-        
 
         fetchData();
     }, [courseState.language, authState, courseState.isLoading])
@@ -35,9 +34,8 @@ const CourseContainer = () => {
         return <Loading />;
 
     return (
-        <div className="course-container">
-            <div className="course-Taptitle">{Taptitle_text[courseState.language]}</div>
-            <div className="list">
+        <div className="letter-container">
+            <div className="letter">
                 {Chapters.length > 0 ? Chapters.map((chapter) => (
                     chapter.renderCard()
                 )) : ""}
@@ -46,4 +44,4 @@ const CourseContainer = () => {
     )
 }
 
-export default CourseContainer
+export default LetterRoute

@@ -1,29 +1,29 @@
-import "./Course.css"
+
 import { CourseContext } from "../../context/courseContext"
 import { useContext, useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import Loading from "../../component/Loading/Loading"
-import Chapter from "./Chapter"
+import Lesson from "./Lesson" 
 import { AuthContext } from "../../context/authContext"
 
-const CourseContainer = () => {
-    const Taptitle_text = { Vietnamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
-    const { courseState, loadChapter, setIsLoading, setLanguage } = useContext(CourseContext);
+const LessonsRoute = () => {
+    const Taptitle_text = { VietNamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
+    const { courseState, loadLesson, setIsLoading, setLanguage } = useContext(CourseContext);
     const {authState} = useContext(AuthContext)
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
+    const {chapter} = useParams()
+    const [chapterId, chapterName] = chapter.split("name=")
 
     useEffect(() => {
 
         const fetchData = async () => {
-            console.log(courseState.language)
-            await loadChapter(courseState.language);
-            console.log(courseState.colection)
+            await loadLesson(chapterId);
             const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
-            const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
+            const chapterInstances = sortedData.map(data => new Lesson(data, navigate, setIsLoading));
             setChapters(chapterInstances);
+            console.log("Lessons: ", courseState.colection)
         };
-        
 
         fetchData();
     }, [courseState.language, authState, courseState.isLoading])
@@ -46,4 +46,4 @@ const CourseContainer = () => {
     )
 }
 
-export default CourseContainer
+export default LessonsRoute

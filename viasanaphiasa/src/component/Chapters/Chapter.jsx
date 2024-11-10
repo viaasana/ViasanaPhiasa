@@ -5,9 +5,10 @@ const ChapterContainer = ()=>{
     console.log("Rendering Chapter component");
 
     return (
-        <>
-            <h1>"hi i'm chapter</h1>
-        </>
+        <div className="chapter-container">
+            <div className="title"></div>
+            
+        </div>
     )
 }
 

@@ -2,6 +2,8 @@ import "./header.css"
 import { useContext } from "react"
 import { AuthContext } from "../../context/authContext"
 import { useNavigate } from "react-router-dom"
+import LanguageDropdown from "./LanguageDropdown/LanguageDropdown"
+
 
 const MyHeader = () => {
     const navigate = useNavigate()
@@ -46,6 +48,7 @@ const MyHeader = () => {
         <div className="MyHeader">
             <h1>វាសនាភាសា</h1>
             <div className="navbar">
+                <LanguageDropdown />
                 <a href="#home">Home</a>
                 <a href="#news">News</a>
                 <UserButton />

@@ -4,6 +4,7 @@ import AddNewDocument from "../../cpmponents/addNewDocument/addNewDocument";
 import Chapter from "./Chapter";
 import Loading from "../../cpmponents/Loading/Loading";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 const ChapterList = () => {
     const { courseState, loadChapter, setIsLoading } = useContext(CourseContext);
@@ -11,6 +12,9 @@ const ChapterList = () => {
     const navigate = useNavigate()
     const [inPageLoading, setInPageLoading] = useState(courseState.isLoading)
     const [corectColectionName, setCorectColectionName] = useState(0)
+    const {authState} = useContext(AuthContext)
+
+
     useEffect(() => {
         const fetchData = async () => {
             await loadChapter();
@@ -21,24 +25,24 @@ const ChapterList = () => {
 
         fetchData();
 
-        if (Chapters[0]) {
-            const curentColectionName = Chapters[0].name.split(' ')[0]
-            if (curentColectionName != "Chapter") {
-                setInPageLoading(true)
-                setCorectColectionName(0)
-            }
-            else {
-                setCorectColectionName(corectColectionName + 1)
-                if (corectColectionName >= 10) {
-                    setInPageLoading(false)
-                    setCorectColectionName(10)
-                }
-            }
-        }
-    }, [courseState]);
+        // if (Chapters[0]) {
+        //     const curentColectionName = Chapters[0].name.split(' ')[0]
+        //     if (curentColectionName != "Chapter") {
+        //         setInPageLoading(true)
+        //         setCorectColectionName(0)
+        //     }
+        //     else {
+        //         setCorectColectionName(corectColectionName + 1)
+        //         if (corectColectionName >= 10) {
+        //             setInPageLoading(false)
+        //             setCorectColectionName(10)
+        //         }
+        //     }
+        // }
+    }, [courseState.isLoading, authState]);
     
 
-    if (courseState.isLoading || inPageLoading)
+    if (courseState.isLoading)
         return <Loading />;
 
     return (

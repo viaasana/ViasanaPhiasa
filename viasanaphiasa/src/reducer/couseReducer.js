@@ -20,7 +20,7 @@ export const CourseReducer = (state, action) =>{
                 video: payload[0].video,
                 sound: payload[0].sound
             }
-        case 'SET_LANGUAGE':
+        case "SET_LANGUAGE":
             return{
                 ...state,
                 language: payload

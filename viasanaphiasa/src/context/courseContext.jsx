@@ -11,16 +11,18 @@ const CourseContextProvider = ({ children }) => {
         isLoading: true,
         colection: [],
         video: { videoDesc: "", videoUrl: "" },
-        language: "Vietnamese"
+        language: "VietNamese"
     })
     const { authState } = useContext(AuthContext)
+
+
     //load chapter
-    const loadChapter = async () => {
+    const loadChapter = async (language) => {
         if (authState.isAuthenticated) {
             try {
                 const response = await axios.get(`${apiUrl}/courses/`, {
                     params: {
-                        language: "VietNamese"
+                        language: language
                     },
                     headers: {
                         'Content-Type': 'application/json',
@@ -190,14 +192,23 @@ const CourseContextProvider = ({ children }) => {
         dispatch({ type: "SET_IS_LOADING", payload: isLoading })
     }
 
-    const setLanguage = ({language})=>{
-        if(language=="Khmer")
-            dispatch({type: "SET_LANGUAGE", payload: "Khmer"})
-        else if(language=="English")
-            dispatch({type: "SET_LANGUAGE", payload: "English"})
-
-        dispatch({type: "SET_LANGUAGE", payload: "Vietnamese"})
-    }
+    const setLanguage = ( language ) => {
+        try {
+            if (!dispatch) {
+                throw new Error("Dispatch is not defined.");
+            }
+    
+            if (language === "Khmer") {
+                dispatch({ type: "SET_LANGUAGE", payload: "Khmer" });
+            } else if (language === "English") {
+                dispatch({ type: "SET_LANGUAGE", payload: "English" });
+            } else {
+                dispatch({ type: "SET_LANGUAGE", payload: "Vietnamese" });
+            }
+        } catch (error) {
+            console.error("Error in setLanguage:", error.message);
+        }
+    };
 
     const courseContexData = { courseState, loadChapter, loadLesson, loadLetter, loadDetailLetter, setIsLoading, uploadFile, setLanguage }
 

@@ -20,10 +20,12 @@ body{
   min-height: 100vh;
   padding: 0;
   margin: 0;
+  height: max-content;
 }
 
 .container{
   width: 100%;
+  height: max-content;
   min-height: 80vh;
   display: flex;
   align-items: center;

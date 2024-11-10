@@ -2,10 +2,11 @@ import "./header.css"
 import { useContext } from "react"
 import { AuthContext } from "../../context/authContext"
 import { useNavigate } from "react-router-dom"
+import LanguageDropdown from "./LanguageDropdown/LanguageDropdown"
 
 const MyHeader = () => {
     const navigate = useNavigate()
-    const {authState, logout} = useContext(AuthContext)
+    const { authState, logout } = useContext(AuthContext)
 
 
 
@@ -17,8 +18,8 @@ const MyHeader = () => {
         navigate("/login")
     }
 
-    
-    const  UserButton = () => {
+
+    const UserButton = () => {
         if (authState.isAuthenticated)
             return (
                 <div className="dropdown">
@@ -29,7 +30,7 @@ const MyHeader = () => {
                         <a onClick={handleLogout}>Logout</a>
                     </div>
                 </div>
-        )
+            )
         return (
             <div className="dropdown">
                 <button className="dropbtn" onClick={openLogin}>Login
@@ -40,12 +41,13 @@ const MyHeader = () => {
             </div>
         )
     }
-    
+
 
     return (
         <div className="MyHeader">
             <h1>វាសនាភាសា</h1>
             <div className="navbar">
+                <LanguageDropdown />
                 <a href="#home">Home</a>
                 <a href="#news">News</a>
                 <UserButton />
