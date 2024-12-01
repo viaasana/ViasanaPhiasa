@@ -361,6 +361,40 @@ router.get("/:letterId/video", verifyToken, async (req, res) => {
         return res.status(400).json({ success: false, message: error.message || "An error occurred" })
     }
 })
+
+// @Route get lessonId/letterId/image
+// @Desc get image desc
+// @access Private
+
+router.get("/:letterId/video/desc", verifyToken, async (req, res) => {
+    const letterId = req.params.letterId
+    const language = req.query.language
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" })
+    }
+    if (!language)
+        return res.status(400).json({ success: false, message: "language is required" })
+    try {
+        const image = await Video.findOne({ letter: letterId })
+        if (!image)
+            return res.status(404).json({ success: false, message: "Image not found" })
+        const text = await textContents.findById(image.description)
+        let ImageDsc
+        if (language == "VietNamese") {
+            ImageDsc = text.Vietnamese
+        }
+        else if (language == "Khmer") {
+            ImageDsc = text.Khmer
+        }
+        else if (language == "English") {
+            ImageDsc = text.English
+        }
+        return res.status(200).json({ success: true, message: "desc load successfuly", description: ImageDsc })
+    } catch (error) {
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    }
+})
+
 // @Route get lessonId/letterId/sound
 // @Desc get sound
 // @access Private

@@ -5,9 +5,16 @@
     height: 100%;
     margin: 0 auto;
     padding: 20px;
-    height: 100%;
+    text-align: center;
     .letter{
         width: 100%;
         height: 100%;
+        button{
+            background-color: #26A2EF;
+            font-size: medium;
+            font-weight: bold;
+            height: 30px;
+            border-radius: 10px;
+        }
     }
 }

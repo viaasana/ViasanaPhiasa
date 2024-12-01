@@ -1,0 +1,57 @@
+
+  .App {
+    text-align: center;
+  }
+  
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10%;
+  }
+  
+  .hero-content {
+    max-width: 50%;
+    text-align: left;
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+    margin: 0;
+  }
+  
+  .hero-content .highlight {
+    color: #ff6600;
+  }
+  
+  .hero-content p {
+    font-size: 1rem;
+    color: #555;
+    margin: 20px 0;
+  }
+  
+  .cta-button {
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #444;
+  }
+  
+  .hero-image {
+    max-width: 40%;
+  }
+  
+  .hero-image .image {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  

@@ -10,7 +10,9 @@ const CourseContextProvider = ({ children }) => {
     const [courseState, dispatch] = useReducer(CourseReducer, {
         isLoading: true,
         colection: [],
-        video: { videoDesc: "", videoUrl: "" },
+        video: { videoUrl: "", videoDesc: "" },
+        image: { imageUrl: "", imageDesc: ""},
+        sound: "",
         language: "VietNamese"
     })
     const { authState } = useContext(AuthContext)
@@ -28,8 +30,9 @@ const CourseContextProvider = ({ children }) => {
                         'Content-Type': 'application/json',
                     }
                 });
-                if (response.data.success)
+                if (response.data.success){
                     dispatch({ type: "COURSE_LOADED_SUCCESS", payload: response.data.chapters })
+                }
             } catch (error) {
                 console.log(error)
                 if (error.response.data)
@@ -117,7 +120,14 @@ const CourseContextProvider = ({ children }) => {
             const videoUrl = URL.createObjectURL(videoRes.data)
 
             //get video desc
-
+            const videoDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video/desc`, {
+                params: {
+                    language: "VietNamese"
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
             //get sound
             const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
                 headers: {
@@ -132,7 +142,7 @@ const CourseContextProvider = ({ children }) => {
                 dispatch({
                     type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
                         image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
-                        video: { videoUrl: videoUrl, videoDesc: "videoDesc.data.description" },
+                        video: { videoUrl: videoUrl, videoDesc: videoDescRes.data.description },
                         sound: {soundUrl: soundUrl}
                     }]
                 })
@@ -203,7 +213,7 @@ const CourseContextProvider = ({ children }) => {
             } else if (language === "English") {
                 dispatch({ type: "SET_LANGUAGE", payload: "English" });
             } else {
-                dispatch({ type: "SET_LANGUAGE", payload: "Vietnamese" });
+                dispatch({ type: "SET_LANGUAGE", payload: "VietNamese" });
             }
         } catch (error) {
             console.error("Error in setLanguage:", error.message);

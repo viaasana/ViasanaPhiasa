@@ -1,0 +1,22 @@
+.site-above {
+    width: 100%;
+    height: 50px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+        padding: 10px 20px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.3s ease;
+    }
+    button:hover{
+        background-color: #444;
+    }
+}

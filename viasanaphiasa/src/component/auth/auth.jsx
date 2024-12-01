@@ -6,9 +6,12 @@ import Loading from "../Loading/Loading"
 import { useNavigate } from "react-router-dom"
 import MyHeader from "../header/MyHeader"
 import MyFooter from "../footer/MyFooter"
+import { CourseContext } from "../../context/courseContext"
 
-const Auth = ({authRoute, language, isHeaderAndFooter})=>{
+const Auth = ({authRoute, isHeaderAndFooter})=>{
     const {authState} = useContext(AuthContext)
+    const {courseState} = useContext(CourseContext)
+    const language = courseState.language
     const isLoading = authState.isLoading
     const spinn = <div><Loading /></div>
 

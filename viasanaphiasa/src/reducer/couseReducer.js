@@ -1,6 +1,6 @@
-export const CourseReducer = (state, action) =>{
-    const {type, payload} = action
-    switch(type){
+export const CourseReducer = (state, action) => {
+    const { type, payload } = action
+    switch (type) {
         case "COURSE_LOADED_SUCCESS":
             return {
                 ...state,
@@ -21,7 +21,7 @@ export const CourseReducer = (state, action) =>{
                 sound: payload[0].sound
             }
         case "SET_LANGUAGE":
-            return{
+            return {
                 ...state,
                 language: payload
             }

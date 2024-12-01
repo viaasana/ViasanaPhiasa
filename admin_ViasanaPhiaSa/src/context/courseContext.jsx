@@ -114,7 +114,7 @@ const CourseContextProvider = ({ children }) => {
             const videoUrl = URL.createObjectURL(videoRes.data)
 
             //get video desc
-
+            
             //get sound
             const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
                 headers: {

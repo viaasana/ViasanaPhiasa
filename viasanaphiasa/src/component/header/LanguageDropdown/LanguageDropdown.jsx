@@ -4,7 +4,6 @@ import "./LanguageDropdown.css"
 
 const LanguageDropdown = () => {
   const {courseState, setLanguage} = useContext(CourseContext)
-  console.log(courseState.language)
 
 
   const handleChange = (event) => {
