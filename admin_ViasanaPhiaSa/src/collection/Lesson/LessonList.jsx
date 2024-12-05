@@ -25,7 +25,7 @@ const LessonList = () => {
         fethData()
 
         if (lessons[0]) {
-            const curentColectionName = lessons[0].name.split(' ')[0]
+            const curentColectionName = lessons[0].name.split(' ')[0] || "Lesson"
             if (curentColectionName != "Lesson") {
                 setInPageLoading(true)
                 setCorectColectionName(0)

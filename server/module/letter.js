@@ -8,6 +8,10 @@ const letterSchema = new Schema({
         required: true,
         unique: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     lesson:{
         type: Schema.Types.ObjectId,
         ref: 'lessons',

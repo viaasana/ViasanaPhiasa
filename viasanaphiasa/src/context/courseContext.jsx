@@ -11,9 +11,11 @@ const CourseContextProvider = ({ children }) => {
         isLoading: true,
         colection: [],
         video: { videoUrl: "", videoDesc: "" },
-        image: { imageUrl: "", imageDesc: ""},
+        image: { imageUrl: "", imageDesc: "" },
         sound: "",
-        language: "VietNamese"
+        language: "VietNamese",
+        curentLearn: null,
+        LetterInstant: []
     })
     const { authState } = useContext(AuthContext)
 
@@ -30,7 +32,7 @@ const CourseContextProvider = ({ children }) => {
                         'Content-Type': 'application/json',
                     }
                 });
-                if (response.data.success){
+                if (response.data.success) {
                     dispatch({ type: "COURSE_LOADED_SUCCESS", payload: response.data.chapters })
                 }
             } catch (error) {
@@ -51,7 +53,7 @@ const CourseContextProvider = ({ children }) => {
             try {
                 const response = await axios.get(`${apiUrl}/courses/chapter/${chapterId}/`, {
                     params: {
-                        language: "VietNamese"
+                        language: courseState.language
                     },
                     headers: {
                         'Content-Type': 'application/json',
@@ -70,97 +72,168 @@ const CourseContextProvider = ({ children }) => {
     }
     //load letter
     const loadLetter = async (chapterId, lessonId) => {
-        try {
-            const response = await axios.get(`${apiUrl}/courses/chapter/${chapterId}/lesson/${lessonId}`, {
-                params: {
-                    language: "VietNamese"
-                },
-                headers: {
-                    'Content-Type': 'application/json',
+        if (authState.isAuthenticated) {
+            try {
+                const response = await axios.get(`${apiUrl}/courses/chapter/${chapterId}/lesson/${lessonId}`, {
+                    params: {
+                        language: courseState.language
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if (response.data.success) {
+
+                    dispatch({ type: "COURSE_LOADED_SUCCESS", payload: response.data.letters })
                 }
-            })
-            if (response.data.success)
-                dispatch({ type: "COURSE_LOADED_SUCCESS", payload: response.data.letters })
-        } catch (error) {
-            console.log(error)
-            if (error.response.data)
-                return error.response.data
-            return { success: false, message: error.message }
-        }
+            } catch (error) {
+                console.log(error)
+                if (error.response.data)
+                    return error.response.data
+                return { success: false, message: error.message }
+            }
+        } else
+            return { success: false, message: "This is private page" }
     }
 
     //load detail in one letter
     const loadDetailLetter = async (lessonId, letterId) => {
-        try {
-            //get image file
-            const ImageResponse = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                responseType: 'blob'
-            })
+        if (authState.isAuthenticated) {
+            setIsLoading(true)
+            try {
+                //get image file
+                const ImageResponse = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    responseType: 'blob'
+                })
 
-            const imageUrl = URL.createObjectURL(ImageResponse.data);
-            //get image desc
-            const ImgDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image/desc`, {
-                params: {
-                    language: "VietNamese"
-                },
-                headers: {
-                    'Content-Type': 'application/json',
+                const imageUrl = URL.createObjectURL(ImageResponse.data);
+                //get image desc
+                const ImgDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image/desc`, {
+                    params: {
+                        language: courseState.language
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                //get video file
+                const videoRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    responseType: 'blob'
+                })
+                const videoUrl = URL.createObjectURL(videoRes.data)
+
+                //get video desc
+                const videoDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video/desc`, {
+                    params: {
+                        language: courseState.language
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                //get sound
+                const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    responseType: 'blob'
+                })
+
+                const soundUrl = URL.createObjectURL(soundRes.data)
+
+                
+
+                if (ImgDescRes.data.success) {
+                    console.log("I'm here")
+                    dispatch({
+                        type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
+                            image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
+                            video: { videoUrl: videoUrl, videoDesc: videoDescRes.data.description },
+                            sound: { soundUrl: soundUrl }
+                        }]
+                    })
+                    setIsLoading(false)
+                    return { success: true }
                 }
-            })
-            //get video file
-            const videoRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                responseType: 'blob'
-            })
-            const videoUrl = URL.createObjectURL(videoRes.data)
-
-            //get video desc
-            const videoDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video/desc`, {
-                params: {
-                    language: "VietNamese"
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-            //get sound
-            const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                responseType: 'blob'
-            })
-
-            const soundUrl = URL.createObjectURL(soundRes.data)
-
-            if (ImgDescRes.data.success) {
+                return { success: false, message: "This letter currently has no data" }
+            } catch (error) {
                 dispatch({
                     type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
-                        image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
-                        video: { videoUrl: videoUrl, videoDesc: videoDescRes.data.description },
-                        sound: {soundUrl: soundUrl}
+                        image: { imageUrl: '', imageDesc: "" },
+                        video: { videoUrl: '', videoDesc: "" }
                     }]
                 })
-                return { success: true }
+                return { success: false, message: error.response }
             }
-            return { success: false, message: "This letter currently has no data" }
-        } catch (error) {
-            dispatch({
-                type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
-                    image: { imageUrl: '', imageDesc: "" },
-                    video: { videoUrl: '', videoDesc: "" }
-                }]
-            })
-            return { success: false, message: error.response }
+        }
+        else {
+            return { success: false, message: "This is private page", status: 401 }
         }
     }
 
-    
+    //re load detail letter when change language
+    const detailLetterNoVideoAndSound = async (lessonId, letterId) => {
+        if (authState.isAuthenticated) {
+            setIsLoading(true)
+            try {
+
+                //get image desc
+                const ImgDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/image/desc`, {
+                    params: {
+                        language: courseState.language
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+
+                //get video desc
+                const videoDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video/desc`, {
+                    params: {
+                        language: courseState.language
+                    },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                const imageUrl = courseState.image.imageUrl
+                const videoUrl = courseState.video.videoUrl 
+                const sound = courseState.sound
+                // console.log("url :", courseState)
+                if (ImgDescRes.data.success) {
+                    dispatch({
+                        type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
+                            image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
+                            video: { videoUrl: videoUrl, videoDesc: videoDescRes.data.description },
+                            sound: sound
+                        }]
+                    })
+                    setIsLoading(false)
+                    return { success: true }
+                }
+                setIsLoading(false)
+                return { success: false, message: "This letter currently has no data" }
+            } catch (error) {
+                dispatch({
+                    type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
+                        image: { imageUrl: '', imageDesc: "" },
+                        video: { videoUrl: '', videoDesc: "" }
+                    }]
+                })
+                return { success: false, message: error.response }
+            }
+        }
+        else {
+            return { success: false, message: "This is private page",  status: 401 }
+        }
+    }
+
 
     //uploadFile
     const uploadFile = async (file, nameform, colectionName, chapterId, lessonId, letterId) => {
@@ -196,18 +269,18 @@ const CourseContextProvider = ({ children }) => {
             return { success: false, message: "this id private page" }
         }
     }
-   
+
 
     const setIsLoading = (isLoading) => {
         dispatch({ type: "SET_IS_LOADING", payload: isLoading })
     }
 
-    const setLanguage = ( language ) => {
+    const setLanguage = (language) => {
         try {
             if (!dispatch) {
                 throw new Error("Dispatch is not defined.");
             }
-    
+
             if (language === "Khmer") {
                 dispatch({ type: "SET_LANGUAGE", payload: "Khmer" });
             } else if (language === "English") {
@@ -220,7 +293,29 @@ const CourseContextProvider = ({ children }) => {
         }
     };
 
-    const courseContexData = { courseState, loadChapter, loadLesson, loadLetter, loadDetailLetter, setIsLoading, uploadFile, setLanguage }
+    const setLetterInstant = (instant) => {
+        console.log("letter instant is set", courseState.colection)
+        dispatch({ type: "SET_LETTER_INSTANT", payload: instant })
+    }
+
+    //handel change curent learn
+    const setCurentLearn = (newCurent) => {
+        dispatch({ type: "CHANGE_CURENT_LEARNING", payload: newCurent })
+    }
+
+    const courseContexData = {
+        courseState,
+        loadChapter,
+        loadLesson,
+        loadLetter,
+        loadDetailLetter,
+        setIsLoading,
+        uploadFile,
+        setLanguage,
+        detailLetterNoVideoAndSound,
+        setCurentLearn,
+        setLetterInstant
+    }
 
 
     return (

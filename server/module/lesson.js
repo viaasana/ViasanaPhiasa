@@ -8,6 +8,10 @@ const lessonSchema = new Schema({
         required: true,
         unique: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     chapter:{
         type: Schema.Types.ObjectId,
         ref: 'chapters',

@@ -9,6 +9,7 @@ export default class Lesson{
         this.setIsLoading = setIsLoading
         this.letterCount = doc.letterCount
         this.openLetter = this.openLetter.bind(this)
+        this.createAt = doc.createAt
     }
 
     openLetter(){

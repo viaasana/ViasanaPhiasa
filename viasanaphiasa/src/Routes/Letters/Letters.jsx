@@ -1,52 +1,74 @@
-import "./Letters.css"
-import { CourseContext } from "../../context/courseContext"
-import { useContext, useState, useEffect } from "react"
-import { useNavigate, useParams } from "react-router-dom"
-import Loading from "../../component/Loading/Loading"
-import Letter from "../DetailLetter/Letter"
-import { AuthContext } from "../../context/authContext"
+import "./Letters.css";
+import { CourseContext } from "../../context/courseContext";
+import { useContext, useState, useEffect } from "react";
+import { Route, Routes, useLocation, useParams } from "react-router-dom";
+import Letter from "../DetailLetter/Letter";
+import { AuthContext } from "../../context/authContext";
+import LetterLanding from "./lettersLanding";
+import Controller from "./controller";
+import DetailLetter from "../DetailLetter/DetailLetter";
 
 const LetterRoute = () => {
-    const textButton = {VietNamese: "Bắt đầu học", Khmer: "ចាប់ផ្តើម", English: "Start"}
-    const textInfor = {VietNamese: "Chữ", Khmer: "អក្សរ", English: "Letter"}
-    const { courseState, loadLetter, setLanguage } = useContext(CourseContext);
-    const { authState } = useContext(AuthContext)
-    const [Chapters, setChapters] = useState([]);
-    const { chapter, lesson } = useParams()
-    const [chapterId, chapterName] = chapter.split("name=")
-    const [lessonId, lessonname] = lesson.split("name=")
-    const navigate = useNavigate()
+    const textButton = { VietNamese: "Bắt đầu học", Khmer: "ចាប់ផ្តើម", English: "Start" };
+    const textInfor = { VietNamese: "Chữ", Khmer: "អក្សរ", English: "Letter" };
 
+    const { courseState, loadLetter, setCurentLearn, setLetterInstant } = useContext(CourseContext);
+    const { authState } = useContext(AuthContext);
+
+    const { chapter, lesson, letter } = useParams(); // Access route params
+    const [chapterId, chapterName] = chapter.split("name=");
+    const [lessonId, lessonName] = lesson.split("name=");
+
+    const location = useLocation()
+
+
+    const [Chapters, setChapters] = useState([]);
+    const [curent, setCurent] = useState("");
+
+    // Fetch letters when language or authState changes
     useEffect(() => {
         const fetchData = async () => {
-            await loadLetter(chapterId, lessonId)
-        }
+            await loadLetter(chapterId, lessonId);
+        };
         fetchData();
-    }, [courseState.language, authState])
+    }, [courseState.language, authState, location]);
+
+    // Sort and prepare letters when collection changes
     useEffect(() => {
-        const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name))
-        const LetterInstant = sortedData.map(data => new Letter(data, navigate))
-        setChapters(LetterInstant)
-    }, [courseState.colection])
+        if (courseState.colection?.length) {
+            const sortedData = [...courseState.colection].sort((a, b) =>
+                a.createAt.localeCompare(b.createAt)
+            );
+            const LetterInstant = sortedData.map(data => new Letter(data));
+            setChapters(LetterInstant);
+            setLetterInstant(LetterInstant)
+
+            // Set default current letter
+            setCurentLearn(courseState.LetterInstant[0]?.id || "");
+        }
+    }, [courseState.colection]);
 
 
-    const handleStart = ()=>{
-        const link = courseState.colection[0].id + "state=0"
-        navigate(link)
-    }
-
-    if (courseState.isLoading )
-        return <Loading />;
 
     return (
         <div className="letter-container">
-            <div className="letter">
-                <h2>{lessonname}</h2>
-                <h3>{courseState.colection.length} {textInfor[courseState.language]}</h3>
-                <button onClick={handleStart}>{textButton[courseState.language]}</button>
-            </div>
+            <Routes>
+                <Route
+                    index
+                    element={
+                        <LetterLanding
+                            lessonName={lessonName}
+                            length={courseState.LetterInstant.length}
+                            lengthDesc={textInfor[courseState.language]}
+                            buttonName={textButton[courseState.language]}
+                        />
+                    }
+                />
+                <Route path="/:letter" element={<DetailLetter />} />
+            </Routes>
+            <Controller list={courseState.colection} curent={curent} />
         </div>
-    )
-}
+    );
+};
 
-export default LetterRoute
+export default LetterRoute;

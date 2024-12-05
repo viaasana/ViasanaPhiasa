@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/authContext"
 
 const LessonsRoute = () => {
     const Taptitle_text = { VietNamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
-    const { courseState, loadLesson, setIsLoading, setLanguage } = useContext(CourseContext);
+    const { courseState, loadLesson, setIsLoading } = useContext(CourseContext);
     const {authState} = useContext(AuthContext)
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
@@ -18,7 +18,6 @@ const LessonsRoute = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log(courseState.language);
             await loadLesson(chapterId);
         };
     
@@ -26,7 +25,7 @@ const LessonsRoute = () => {
     }, [courseState.language, authState.isAuthenticated, location]);
     
     useEffect(() => {
-        const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
+        const sortedData = [...courseState.colection].sort((a, b) => a.createAt.localeCompare(b.createAt));
         const chapterInstances = sortedData.map(data => new Lesson(data, navigate, setIsLoading));
         setChapters(chapterInstances);
     }, [courseState.colection]);

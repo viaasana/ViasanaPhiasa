@@ -9,6 +9,10 @@ const chapterSchema = new Schema({
         required: true,
         unique: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     lessonCount:{
         type: Number,
         default: 0,

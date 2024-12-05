@@ -22,7 +22,7 @@ const CourseContainer = () => {
     }, [courseState.language, authState.isAuthenticated]);
     
     useEffect(() => {
-        const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
+        const sortedData = [...courseState.colection].sort((a, b) => a.createAt.localeCompare(b.createAt)); 
         const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
         setChapters(chapterInstances);
     }, [courseState.colection]);

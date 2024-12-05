@@ -6,11 +6,10 @@ export default class Letter {
     constructor(doc) {
         this.id = doc.id
         this.name = doc.name
-        this.totalState = doc.totalState
-        this.state = doc.state
         this.video = doc.video
         this.image = doc.image
         this.sound = doc.sound
+        this.createAt = doc.createAt
     }
 
     renderCard() {
@@ -21,7 +20,7 @@ export default class Letter {
                 <Loading />
             )
         return (
-            <LetterCard totalState={this.totalState} state={this.state} data={data} />
+            <LetterCard  data={data} />
         )
     }
 }

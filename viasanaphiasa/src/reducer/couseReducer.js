@@ -16,7 +16,6 @@ export const CourseReducer = (state, action) => {
             return {
                 ...state,
                 image: payload[0].image,
-                isLoading: false,
                 video: payload[0].video,
                 sound: payload[0].sound
             }
@@ -24,6 +23,17 @@ export const CourseReducer = (state, action) => {
             return {
                 ...state,
                 language: payload
+            }
+        case "CHANGE_CURENT_LEARNING":
+            return {
+                ...state,
+                curentLearn : payload
+            }
+
+        case "SET_LETTER_INSTANT":
+            return {
+                ...state,
+                LetterInstant: payload
             }
         default:
             return state

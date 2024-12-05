@@ -11,8 +11,8 @@ const Card = ({type, collection, handleClick }) => {
     const {id, name, status, chapterId, lessonId} = collection
 
     return (
-        <div className="card">
-            <div className="content" onClick={() => handleClick?handleClick(id, name):""}>
+        <div className="card" onClick={() => handleClick?handleClick(id, name):""}>
+            <div className="content" >
                 <div className="card-content">
                     <h2 className="cardTitle">{name}</h2>
                     <p className="cardStatus">{status}</p>
