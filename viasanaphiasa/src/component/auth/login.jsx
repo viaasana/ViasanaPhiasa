@@ -54,25 +54,24 @@ const Login = ({ language }) => {
     })
 
     const { userName, password } = loginForm
-    
+
     const onChangeLoginForm = event => setLoginForm({ ...loginForm, [event.target.name]: event.target.value })
 
     //onsubmit
     const navigate = useNavigate()
-    const navigateToAdminTap = ()=>{
+    const navigateToAdminTap = () => {
         navigate("/course")
     }
-    
+
 
     const login = async event => {
         event.preventDefault()
         try {
             const loginData = await loginUser(loginForm)
             console.log(loginData)
-            if(loginData.success)
-            {
+            if (loginData.success) {
                 toast.success(loginData.message)
-                navigateToAdminTap() 
+                navigateToAdminTap()
             }
             else
                 toast.error(loginData.message)
@@ -93,11 +92,9 @@ const Login = ({ language }) => {
                 <h1>{thisText.h1}</h1>
                 <form onSubmit={login}>
                     <div className="input-group">
-                        <a>&#9993;</a>
                         <input type="email" placeholder="Email" required name="userName" value={userName} onChange={onChangeLoginForm} />
                     </div>
                     <div className="input-group">
-                        <a>&#128274;</a>
                         <input type="password" placeholder={thisText.password} required name="password" value={password} onChange={onChangeLoginForm} />
                     </div>
                     <button type="submit" className="login-btn">{thisText.submit_button}</button>

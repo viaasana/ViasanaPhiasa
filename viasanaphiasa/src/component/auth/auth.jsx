@@ -22,14 +22,11 @@ const Auth = ({authRoute, isHeaderAndFooter})=>{
 
     return(
         <>
-            {isHeaderAndFooter&& <MyHeader/>}
-            <div className="container">
+            <div className="auth-container">
                 {isLoading&&spinn}
                 {authRoute==="login"&&!isLoading && <Login language={language}/>}
                 {authRoute==="register"&&!isLoading && <Register language={language}/>}
-            </div>
-            {isHeaderAndFooter&& <MyFooter/>}
-        </>
+            </div>        </>
     )
 }
 

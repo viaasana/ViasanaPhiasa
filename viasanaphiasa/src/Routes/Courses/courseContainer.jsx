@@ -5,10 +5,12 @@ import { useNavigate, useLocation } from "react-router-dom"
 import Loading from "../../component/Loading/Loading"
 import Chapter from "./Chapter"
 import { AuthContext } from "../../context/authContext"
+import SetPreview from "../../component/EventSlide/EventSlideMain"
 
 const CourseContainer = () => {
-    const Taptitle_text = { VietNamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
-    const { courseState, loadChapter, setIsLoading, setLanguage } = useContext(CourseContext);
+    const Taptitle_text = { Vietnamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
+    const TapEventTiltle = {Vietnamese: "Các sự kiện đặc biệt: ", Khmer: "ព្រឹត្តិការណ៍ពិសេស៖", English: "Special event:" }
+    const { courseState, loadChapter, setIsLoading } = useContext(CourseContext);
     const {authState} = useContext(AuthContext)
     const [Chapters, setChapters] = useState([]);
     const navigate = useNavigate()
@@ -42,6 +44,8 @@ const CourseContainer = () => {
                     chapter.renderCard()
                 )) : ""}
             </div>
+            <div className="course-Taptitle">{TapEventTiltle[courseState.language]}</div>
+            <SetPreview/>
         </div>
     )
 }

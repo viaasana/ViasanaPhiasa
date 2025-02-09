@@ -1,26 +1,63 @@
-.table {
+
+
+
+
+
+table {
     width: 100%;
     border-collapse: collapse;
+    background: white;
+}
 
-    th, td {
-        padding: 12px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
-    td{
-        button{
-            background-color: #ff0000;
-            border-radius: 10px;
-        }
-    }
+thead {
+    background-color: #007bff;
+    color: white;
+}
 
-    th {
-        background-color: #f2f2f2;
-    }
+thead th {
+    padding: 10px;
+    text-align: left;
+}
 
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
 
-    tr:hover {
-        background-color: #f1f1f1;
-    }
+tbody tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Button Styles */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.btn-view {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-view:hover {
+    background-color: #218838;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
 }

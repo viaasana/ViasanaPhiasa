@@ -37,6 +37,12 @@ const LessonList = () => {
                     setCorectColectionName(10)
                 }
             }
+        }else{
+            setCorectColectionName(corectColectionName + 1)
+            if (corectColectionName >= 30) {
+                setInPageLoading(false)
+                setCorectColectionName(30)
+            }
         }
     }, [courseState])
     if (courseState.isLoading || inPageLoading)

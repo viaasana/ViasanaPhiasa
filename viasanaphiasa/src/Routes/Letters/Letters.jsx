@@ -43,8 +43,6 @@ const LetterRoute = () => {
             setChapters(LetterInstant);
             setLetterInstant(LetterInstant)
 
-            // Set default current letter
-            setCurentLearn(courseState.LetterInstant[0]?.id || "");
         }
     }, [courseState.colection]);
 

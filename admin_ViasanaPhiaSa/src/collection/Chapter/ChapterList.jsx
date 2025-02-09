@@ -38,11 +38,13 @@ const ChapterList = () => {
         //             setCorectColectionName(10)
         //         }
         //     }
+        // }else{
+        //     setInPageLoading(true)
         // }
     }, [courseState.isLoading, authState]);
     
 
-    if (courseState.isLoading)
+    if (courseState.isLoading || inPageLoading)
         return <Loading />;
 
     return (

@@ -1,0 +1,8 @@
+.assignments-container{
+    width: 80%;
+    .title {
+        font: roboto;
+        font-size: 35px;
+        margin: 30px;
+    }
+}

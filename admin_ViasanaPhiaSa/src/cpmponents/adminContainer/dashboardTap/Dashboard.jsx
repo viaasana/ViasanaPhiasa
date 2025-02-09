@@ -1,9 +1,13 @@
 import "./Dashboard.css"
 import { useState, useEffect } from "react"
-
+import { useContext } from "react";
+import { CourseContext } from "../../../context/courseContext";
+import { useLocation } from "react-router-dom";
 
 const ProgressCircle = ({ percentage, lable, color }) => {
     const [animatedPercentage, setAnimatedPercentage] = useState(0);
+
+    
 
     useEffect(() => {
         let progress = 0;
@@ -39,10 +43,23 @@ const ProgressCircle = ({ percentage, lable, color }) => {
 
 
 const DashBoard = () => {
-    const [statUser, setStatUser] = useState(3)
+    const [statUser, setStatUser] = useState(0)
     const [statEvent, setStatEvent] = useState(0)
     const [statChapter, setStatChapter] = useState(1)
 
+    const location = useLocation()
+    const {courseSate, getUerList} = useContext(CourseContext)
+    const columns = ['Name', 'Email', 'ID', 'Progress', "Edit"];
+
+    const [length, setLength] = useState(0)
+        
+    useEffect(()=>{
+        const fetch = async()=>{
+            const res =await getUerList()
+            setStatUser(res.users.length)
+        }
+        fetch()
+    },[location])
 
     return (
         <div className="dashboard-container">

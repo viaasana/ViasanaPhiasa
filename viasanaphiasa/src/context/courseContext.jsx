@@ -13,7 +13,7 @@ const CourseContextProvider = ({ children }) => {
         video: { videoUrl: "", videoDesc: "" },
         image: { imageUrl: "", imageDesc: "" },
         sound: "",
-        language: "VietNamese",
+        language: "Vietnamese",
         curentLearn: null,
         LetterInstant: []
     })
@@ -122,11 +122,13 @@ const CourseContextProvider = ({ children }) => {
                 //get video file
                 const videoRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video`, {
                     headers: {
+                        'Range': 'bytes=0-', // Start streaming from the beginning
                         'Content-Type': 'application/json',
                     },
-                    responseType: 'blob'
-                })
-                const videoUrl = URL.createObjectURL(videoRes.data)
+                    responseType: 'blob',
+                });
+
+                const videoUrl = URL.createObjectURL(videoRes.data);
 
                 //get video desc
                 const videoDescRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/video/desc`, {
@@ -147,10 +149,9 @@ const CourseContextProvider = ({ children }) => {
 
                 const soundUrl = URL.createObjectURL(soundRes.data)
 
-                
+
 
                 if (ImgDescRes.data.success) {
-                    console.log("I'm here")
                     dispatch({
                         type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
                             image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
@@ -163,6 +164,7 @@ const CourseContextProvider = ({ children }) => {
                 }
                 return { success: false, message: "This letter currently has no data" }
             } catch (error) {
+
                 dispatch({
                     type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
                         image: { imageUrl: '', imageDesc: "" },
@@ -203,7 +205,7 @@ const CourseContextProvider = ({ children }) => {
                     }
                 })
                 const imageUrl = courseState.image.imageUrl
-                const videoUrl = courseState.video.videoUrl 
+                const videoUrl = courseState.video.videoUrl
                 const sound = courseState.sound
                 // console.log("url :", courseState)
                 if (ImgDescRes.data.success) {
@@ -230,7 +232,7 @@ const CourseContextProvider = ({ children }) => {
             }
         }
         else {
-            return { success: false, message: "This is private page",  status: 401 }
+            return { success: false, message: "This is private page", status: 401 }
         }
     }
 
@@ -251,7 +253,6 @@ const CourseContextProvider = ({ children }) => {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                console.log("i'm respn data:", response.data)
                 if (response.data.success)
                     return { success: true, message: response.data.message }
 
@@ -286,7 +287,7 @@ const CourseContextProvider = ({ children }) => {
             } else if (language === "English") {
                 dispatch({ type: "SET_LANGUAGE", payload: "English" });
             } else {
-                dispatch({ type: "SET_LANGUAGE", payload: "VietNamese" });
+                dispatch({ type: "SET_LANGUAGE", payload: "Vietnamese" });
             }
         } catch (error) {
             console.error("Error in setLanguage:", error.message);
@@ -294,14 +295,75 @@ const CourseContextProvider = ({ children }) => {
     };
 
     const setLetterInstant = (instant) => {
-        console.log("letter instant is set", courseState.colection)
         dispatch({ type: "SET_LETTER_INSTANT", payload: instant })
     }
 
     //handel change curent learn
     const setCurentLearn = (newCurent) => {
+
         dispatch({ type: "CHANGE_CURENT_LEARNING", payload: newCurent })
     }
+
+    const getIndex = () => {
+        console.log(courseState.LetterInstant)
+        return courseState.LetterInstant.findIndex((item) => item.id == courseState.curentLearn)
+    }
+
+    const clearCouseState = () => {
+        dispatch({ type: "CLEAR" })
+    }
+
+    const getTestOverview = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/courses/assignment/`)
+            return { success: true, assignments: response.data.tests }
+        } catch (error) {
+            return { success: false, error }
+        }
+    }
+
+    const userGetTestOverView = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/courses/assignment/UserGetAsignmentOverview`)
+            return { success: true, assignments: response.data.tests }
+        } catch (error) {
+            return { success: false, error }
+        }
+    }
+
+
+    const getTestById = async (testId) => {
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.get(`${apiUrl}/courses/assignment/user/${testId}`)
+                return { success: true, message: response.data }
+            } catch (error) {
+                return { success: false, error }
+            }
+    }
+
+    const checkIfAssignmentSubmited = async (testId) => {
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.get(`${apiUrl}/courses/assignment/SubmitAssignmnet/${testId}`);
+                return {AssignmentSubmitted: response.data.AssignmentSubmitted,trueAnswers: response.data.trueAnswers ,userAnswers:  response.data.userAnswers,score: response.data.score}
+            }catch(error){
+                return error
+            }
+    }
+
+    const submitAnswer = async(testId, answers)=>{
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.post(`${apiUrl}/courses/assignment/SubmitAssignmnet/${testId}`, { answers });
+        
+                if(response.data.success)
+                    return {success: true, message: "Anssignment submited"}
+            }catch(error){
+                return error
+            }
+    }
+
 
     const courseContexData = {
         courseState,
@@ -314,7 +376,14 @@ const CourseContextProvider = ({ children }) => {
         setLanguage,
         detailLetterNoVideoAndSound,
         setCurentLearn,
-        setLetterInstant
+        setLetterInstant,
+        getIndex,
+        clearCouseState,
+        getTestOverview,
+        getTestById,
+        userGetTestOverView,
+        checkIfAssignmentSubmited,
+        submitAnswer
     }
 
 

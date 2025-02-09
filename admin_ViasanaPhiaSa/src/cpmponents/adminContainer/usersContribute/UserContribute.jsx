@@ -1,7 +1,7 @@
 import "./UserContribute.css"
 import Table from "../../Table/Table"
 
-const UserContribute = () =>{
+const UserContribute = () => {
     const columns = ["ID", "Email", "Content", "file", "Edit"]
     const userContributions = [
         {
@@ -29,10 +29,14 @@ const UserContribute = () =>{
             Edit: 'Edit'
         }
     ];
-    return(
-        <div className="user-contribution">
-            <div className="title">User's contributions</div>
-            <Table columns={columns} data={userContributions}/>
+    return (
+        <div className="user-contribution-container">
+            <div className="user-ctrb-overview-container">
+                <div className="title">User's contributions</div>
+                <div className="table-container">
+                    <Table columns={columns} data={userContributions} />
+                </div>
+            </div>
         </div>
     )
 }

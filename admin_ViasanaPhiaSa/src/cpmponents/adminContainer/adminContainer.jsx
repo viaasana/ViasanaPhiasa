@@ -10,6 +10,7 @@ import Controller from "../Controller/Controller"
 import MyHeader from "../header/MyHeader"
 import MyFooter from "../footer/MyFooter"
 import { ProtectedRoute } from "../routing/protectedRoute"
+import Assignments from "./assignmentsTap/assignments"
 
 
 const AdminContainer =() =>{
@@ -25,13 +26,15 @@ const AdminContainer =() =>{
                 <div className="admincontainer">
                 <Controller/>
                 <Routes>
-                            <Route path="/*" element={<DashBoard/>}/>
+                            <Route path="/" element={<DashBoard/>}/>
                             <Route path="Dashboard/*" element={<DashBoard/>}/>
                             <Route path="User/*" element={<UserTap/>} />
                             <Route path="Data/*" element={<DataTap/>} />
                             <Route path="Event/*" element={<EventTap/>} />
-                            <Route path="User_contribute/*" element={<UserContribute/>} /> 
+                            <Route path="User_contribute/*" element={<UserContribute/>} />
+                            <Route path="assignments/*" element={<Assignments/>}></Route> 
                             <Route path="*" element={<h1>oop! Page not found.</h1>}/>
+            
                 </Routes>
 
                 </div>

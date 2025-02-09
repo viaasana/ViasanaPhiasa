@@ -41,8 +41,8 @@
     font-size: 1.7em;
     color: #333;
     display: -webkit-box;
-    /*word-wrap: break-word; Wrap long words 
-    word-break: break-all;*/
+    /*word-wrap: break-word; Wrap long words */
+    word-break: break-all;
     display: -webkit-box;
     -webkit-line-clamp: 3;/* Number of lines to show */
     -webkit-box-orient: vertical;
@@ -79,4 +79,4 @@ button {
 
 .card-edit-button:hover {
     background-color: #84ff32;
-}
+} 

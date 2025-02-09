@@ -7,6 +7,10 @@ import "./DetailLetter.css";
 import Loading from "../../component/Loading/Loading";
 import { AuthContext } from "../../context/authContext";
 
+
+
+
+
 const DetailLetter = () => {
     const textError = {
         VietNamese: "Có lỗi xảy ra khi tải chi tiết bài học",
@@ -14,7 +18,7 @@ const DetailLetter = () => {
         English: "Error occurred when loading lesson details",
     };
 
-    const { courseState, loadLetter, loadDetailLetter, detailLetterNoVideoAndSound, setCurentLearn, setLetterInstant } =
+    const { courseState, loadLetter, loadDetailLetter, detailLetterNoVideoAndSound, setCurentLearn, setLetterInstant, clearCouseState } =
         useContext(CourseContext);
     const { authState } = useContext(AuthContext);
 
@@ -28,6 +32,8 @@ const DetailLetter = () => {
 
     const [haveData, setHaveData] = useState(false);
     const [detail, setDetail] = useState();
+
+    useEffect(()=>{setHaveData(false)}, [courseState.isLoading])
 
     // Fetch detailed data when route changes or authentication state updates
     useEffect(() => {
@@ -44,8 +50,7 @@ const DetailLetter = () => {
             if (res.success) {
                 setHaveData(true);
             } else if (!res || res.status != 401) {
-                toast.error(res.message)
-                // toast.error(textError[courseState.language]);
+                toast.error(textError[courseState.language]);
                 setHaveData(false);
             }
         };
@@ -56,8 +61,8 @@ const DetailLetter = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await detailLetterNoVideoAndSound(lesson, letterId);
-            if (res.success) {
-                setHaveData(true);
+            if (res.success&&courseState.LetterInstant.length) {
+                 setHaveData(true);
             } else if (!res || res.status != 401) {
                 toast.error(res.message)
                 // toast.error(textError[courseState.language]);
@@ -67,6 +72,8 @@ const DetailLetter = () => {
         fetchData();
     }, [courseState.language]);
 
+
+    // set new letters list 
     useEffect(() => {
         if (courseState.colection?.length) {
             const sortedData = [...courseState.colection].sort((a, b) =>
@@ -79,24 +86,25 @@ const DetailLetter = () => {
 
     // Update the current learning letter when route changes
     useEffect(() => {
+        clearCouseState()
         setCurentLearn(letterId);
     }, [location]);
 
     // Create and set the `Letter` instance when data is ready
     useEffect(() => {
+        console.log("have data changed", haveData)
         if (haveData) {
             const doc = {
                 id: letterId,
                 video: courseState.video,
                 image: courseState.image,
-                sound: courseState.sound,
+                sound: courseState.sound
             };
             const letterInstant = new Letter(doc);
             setDetail(letterInstant);
         }
-    }, [haveData, letterId, courseState]);
-    console.log("have data:", haveData)
-    console.log("image state: ", courseState.image)
+    }, [haveData, location, courseState]);
+
 
     // Show a loading indicator if data is not yet available
     if (courseState.isLoading || !haveData) {

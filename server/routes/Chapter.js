@@ -10,6 +10,7 @@ import textContents from '../module/textContent.js';
 import verifyToken from '../middleware/auth.js';
 import lesson from './lessons.js';
 import Delete from '../function/delete.js';
+import Assignment from "./assignment.js"
 
 // @route GET api/courses/
 // @desc get all chapter
@@ -25,7 +26,7 @@ router.get("/", verifyToken, async (req, res) => {
         await Promise.all(
             chapters.map(async (chapter) => {
                 const name = await textContents.findById(chapter.name)
-                if (language == "VietNamese")
+                if (language == "Vietnamese")
                     dataReturn.push({ id: chapter.id, name: name.Vietnamese, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
                 else if (language == "Khmer")
                     dataReturn.push({ id: chapter.id, name: name.Khmer, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
@@ -102,5 +103,6 @@ router.delete("/", verifyToken, async (req, res) => {
 })
 
 router.use("/chapter", lesson)
+router.use("/assignment", Assignment)
 
 export default router

@@ -1,8 +1,10 @@
 .admincontainer{
     width: 1383px;
-    height: 791px;
+    min-height: 791px;
+    height: max-content;
     background-color: #D9D9D9;
     display: flex;
+    margin: 20px;
 }
 
 

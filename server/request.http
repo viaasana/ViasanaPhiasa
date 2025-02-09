@@ -7,13 +7,9 @@ Content-Type: application/json
 }
 
 ###login
-POST  http://localhost:5000/api/auth/login
+GET  http://localhost:5000/api/userAuthRouter/list
 Content-Type: application/json
 
-{
-    "userName": "viasana@1",
-    "password": "123"
-}
 
 ###
 GET http://localhost:5000/api/courses/chapter/66c75c6c5f7dc62380a09bb5
@@ -24,7 +20,55 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmRmO
     "language": "VietNamese"
 }
 ###
-GET  http://gaia.cs.umass.edu/wireshark-labs/INTRO-wireshark-file1.html
+GET http://localhost:5000/api/courses/assignment
+
 
 ###
-GET http://uit.edu.vn
+POST http://localhost:5000/api/courses/assignment/post
+Content-Type: application/json
+
+{
+    "Vietnamese": "bài tập test 4",
+    "Khmer": "លំហាត់សាកល្បង 4",
+    "English": "test 4"
+}
+###
+POST http://localhost:5000/api/courses/assignment/679041bf079b1c4006a9b43d/post
+Content-Type: application/json
+
+{
+  "content": {
+    "Vietnamese": "Nội dung câu hỏi bằng tiếng Việt test count question",
+    "Khmer": "បរិយាយសំណួរជាភាសាខ្មែរ test count question",
+    "English": "Question content in English test count question"
+  },
+  "trueAnswer": {
+    "Vietnamese": "Đáp án đúng bằng tiếng Việt test count question",
+    "Khmer": "ចម្លើយត្រឹមត្រូវជាភាសាខ្មែរ test count question",
+    "English": "Correct answer in English test count question"
+  },
+  "falseAnswer1": {
+    "Vietnamese": "Đáp án sai 1 bằng tiếng Việt test count question",
+    "Khmer": "ចម្លើយខុសទី១ជាភាសាខ្មែរ test count question",
+    "English": "Wrong answer 1 in English test count question"
+  },
+  "falseAnswer2": {
+    "Vietnamese": "Đáp án sai 2 bằng tiếng Việt test count question",
+    "Khmer": "ចម្លើយខុសទី២ជាភាសាខ្មែរ test count question",
+    "English": "Wrong answer 2 in English test count question"
+  },
+  "falseAnswer3": {
+    "Vietnamese": "Đáp án sai 3 bằng tiếng Việt test count question",
+    "Khmer": "ចម្លើយខុសទី៣ជាភាសាខ្មែរ test count question",
+    "English": "Wrong answer 3 in English test count question"
+  }
+}
+
+###
+GET http://localhost:5000/api/courses/assignment/679041bf079b1c4006a9b43d
+
+###
+DELETE http://localhost:5000/api/courses/assignment/679041bf079b1c4006a9b43d/678e8995f1b757d20e63d3e4
+
+###
+DELETE http://localhost:5000/api/courses/assignment/679041bf079b1c4006a9b43d

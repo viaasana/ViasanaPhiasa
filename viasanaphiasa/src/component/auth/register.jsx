@@ -12,7 +12,7 @@ const  Register = ({language})=>{
             password: "Mật khẩu",
             repeatPassword: "Nhập lại mật khẩu",
             submit_button: "ĐĂNG KÝ",
-            forGotPasword: "Quên mật khẩu?",
+            forGotPassword: "Quên mật khẩu?",
             registerAskH2: "Đã có tài khoản?",
             registerAskP: "Hãy đăng nhập ngay để bắt đầu học.",
             registerButton: "ĐĂNG NHẬP"
@@ -97,15 +97,12 @@ const  Register = ({language})=>{
             <h1>{thisText.h1}</h1>
             <form onSubmit={register}>
                 <div className="input-group">
-                    <a>&#9993;</a>
                     <input type="email" placeholder="Email" required name="userName" value={userName} onChange={onChangeRegisterForm}/>
                 </div>
                 <div className="input-group">
-                    <a>&#128274;</a>
                     <input type="password" placeholder={thisText.password} required name="password" value={password} onChange={onChangeRegisterForm}/>
                 </div>
                 <div className="input-group">
-                    <a>&#128274;</a>
                     <input type="password" placeholder={thisText.repeatPassword} required onChange={checkPassword}/>
                 </div>
                 {canRegister&&<button type="submit" className="login-btn">{thisText.submit_button}</button>}

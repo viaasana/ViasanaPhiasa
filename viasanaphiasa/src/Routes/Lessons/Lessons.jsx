@@ -5,6 +5,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom"
 import Loading from "../../component/Loading/Loading"
 import Lesson from "./Lesson" 
 import { AuthContext } from "../../context/authContext"
+import SetPreview from "../../component/EventSlide/EventSlideMain"
 
 const LessonsRoute = () => {
     const Taptitle_text = { VietNamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
@@ -15,6 +16,7 @@ const LessonsRoute = () => {
     const {chapter} = useParams()
     const [chapterId, chapterName] = chapter.split("name=")
     const location = useLocation()
+    const TapEventTiltle = {VietNamese: "Các sự kiện đặc biệt: ", Khmer: "ព្រឹត្តិការណ៍ពិសេស៖", English: "Special event:" }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +46,8 @@ const LessonsRoute = () => {
                     chapter.renderCard()
                 )) : ""}
             </div>
+            <div className="course-Taptitle">{TapEventTiltle[courseState.language]}</div>
+            <SetPreview/>
         </div>
     )
 }

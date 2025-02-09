@@ -1,4 +1,18 @@
-.LandingContainer{
+/* .LandingContainer{
     width: 100%;
     height: 100%;
+} */
+
+.LandingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.LandingContainer > div {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }

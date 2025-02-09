@@ -21,7 +21,6 @@ const Landing = () => {
 
     return (
         <>
-            <MyHeader />
             <div className="LandingContainer">
                 <Hero scrollToInstruction={scrollToInstruction} />
                 <div ref={authRef}>
@@ -32,7 +31,6 @@ const Landing = () => {
                 </div>
                 <SiteAbove scrollToAuth={scrollToAuth} />
             </div> 
-            <MyFooter />
         </>
     )
 }

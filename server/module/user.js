@@ -11,6 +11,10 @@ const userSchema = new Schema({
         type: String,
         require: true
     },
+    group:{
+        type: Schema.Types.ObjectId,
+        ref: 'texContents',
+    },
     createdAt: {
         type: Date,
         default: Date.now

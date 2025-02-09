@@ -216,9 +216,9 @@ router.get("/:lessonId", verifyToken, async (req, res) => {
                 if (language == "VietNamese")
                     dataReturn.push({ id: letter.id, name: name.Vietnamese, lesson: lessonId, createAt: letter.createdAt })
                 else if (language == "Khmer")
-                    dataReturn.push({ id: letter.id, name: name.Khmer, lesson: lessonId,  createAt: letter.createdAt })
+                    dataReturn.push({ id: letter.id, name: name.Khmer, lesson: lessonId, createAt: letter.createdAt })
                 else if (language == "English")
-                    dataReturn.push({ id: letter.id, name: name.English, lesson: lessonId,  createAt: letter.createdAt })
+                    dataReturn.push({ id: letter.id, name: name.English, lesson: lessonId, createAt: letter.createdAt })
             })
         )
         return res.status(200).json({ success: true, letters: dataReturn })
@@ -258,34 +258,38 @@ router.delete("/:letterId", verifyToken, async (req, res) => {
 // @Desc open letter detail
 // @access Private
 
-router.get("/:letterId/video", verifyToken, async (req, res) => {
-    const letterId = req.params.letterId
-    const language = req.query.language
-    if (!letterId)
-        return res.status(400).json({ success: false, message: "Letter ID not found" })
-    try {
+router.get("/:letterId/video", async (req, res) => {
+    const letterId = req.params.letterId;
+    const language = req.query.language;
 
-        const video = await Video.findOne({ letter: letterId })
-        if (!video)
-            return res.status(200).json({ success: false, message: "Video not found" })
-        const text2 = await textContents.findById(video.description)
-        let videoDsc
-        if (language == "VietNamese") {
-            videoDsc = text2.Vietnamese
-        }
-        else if (language == "Khmer") {
-            videoDsc = text2.Khmer
-        }
-        else if (language == "English") {
-            videoDsc = text2.English
-        }
-        await getFile(video.fileId, res)
-        // return res.status(200).json({ success: true, message: "Get file successfully", videoDesc: videoDsc })
-    } catch (error) {
-        console.log(error)
-        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+    if (!letterId) {
+        return res.status(400).json({ success: false, message: "Letter ID not found" });
     }
-})
+
+    try {
+        const video = await Video.findOne({ letter: letterId });
+        if (!video) {
+            return res.status(404).json({ success: false, message: "Video not found" });
+        }
+
+        const text2 = await textContents.findById(video.description);
+        let videoDesc;
+        if (language === "VietNamese") {
+            videoDesc = text2.Vietnamese;
+        } else if (language === "Khmer") {
+            videoDesc = text2.Khmer;
+        } else if (language === "English") {
+            videoDesc = text2.English;
+        }
+
+        // Stream the video file with range support
+        await getFile("video", video.fileId, req, res);
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json({ success: false, message: error.message || "An error occurred" });
+    }
+});
+
 
 
 
@@ -300,7 +304,7 @@ router.get("/:letterId/image", verifyToken, async (req, res) => {
         if (!image) {
             return res.status(404).json({ success: false, message: "Image not found" })
         }
-        await getFile(image.fileId, res)
+        await getFile("image/jpeg, image/png, image/gif, image/bmp, image/svg+xml, image/webp, image/x-icon, image/tiff", image.fileId, req, res)
     } catch (error) {
         console.log(error)
         return res.status(400).json({ success: false, message: error.message || "An error occurred" })
@@ -344,23 +348,23 @@ router.get("/:letterId/image/desc", verifyToken, async (req, res) => {
 // @Desc get video
 // @access Private
 
-router.get("/:letterId/video", verifyToken, async (req, res) => {
-    const letterId = req.params.letterId
-    if (!letterId) {
-        return res.status(400).json({ success: false, message: "Letter ID not found" })
-    }
-    try {
+// router.get("/:letterId/video", verifyToken, async (req, res) => {
+//     const letterId = req.params.letterId
+//     if (!letterId) {
+//         return res.status(400).json({ success: false, message: "Letter ID not found" })
+//     }
+//     try {
 
-        const video = await Video.findOne({ letter: letterId })
-        if (!video) {
-            return res.status(404).json({ success: false, message: "video not found" })
-        }
-        await getFile(video.fileId, res)
-    } catch (error) {
-        console.log(error)
-        return res.status(400).json({ success: false, message: error.message || "An error occurred" })
-    }
-})
+//         const video = await Video.findOne({ letter: letterId })
+//         if (!video) {
+//             return res.status(404).json({ success: false, message: "video not found" })
+//         }
+//         await getFile(video.fileId, res)
+//     } catch (error) {
+//         console.log(error)
+//         return res.status(400).json({ success: false, message: error.message || "An error occurred" })
+//     }
+// })
 
 // @Route get lessonId/letterId/image
 // @Desc get image desc
@@ -410,7 +414,7 @@ router.get("/:letterId/sound", verifyToken, async (req, res) => {
         if (!sound) {
             return res.status(404).json({ success: false, message: "sound not found" })
         }
-        await getFile(sound.fileId, res)
+        await getFile("audio/mpeg", sound.fileId, req, res)
     } catch (error) {
         console.log(error)
         return res.status(400).json({ success: false, message: error.message || "An error occurred" })

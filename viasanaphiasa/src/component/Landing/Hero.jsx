@@ -2,12 +2,15 @@ import "./Hero.css";
 import { placeholderImage } from "../../../public/placeholder_image";
 import { CourseContext } from "../../context/courseContext"
 import { useContext } from "react";
+import laddingImage1 from "../../assets/ladding_Image1.jpg"
+
 
 const Hero = ({scrollToInstruction}) => {
 
     
     const {courseState} = useContext(CourseContext)
     const placeHoderUrl = placeholderImage()
+
     
     const text= {
         English: {
@@ -42,7 +45,7 @@ const Hero = ({scrollToInstruction}) => {
       </div>
       <div className="hero-image">
         <img
-          src={placeHoderUrl}
+          src={laddingImage1}
           alt="Course Preview"
           className="image"
         />

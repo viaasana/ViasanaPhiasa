@@ -1,8 +1,19 @@
-.user-contribution{
+.user-contribution-container {
     width: 80%;
-    .title {
-        font: roboto;
-        font-size: 35px;
-        margin: 30px;
-    }
+    padding: 20px;
+    margin: auto;
+}
+
+.user-ctrb-overview-container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-container{
+    overflow-x: auto;
+    margin-top: 20px;
 }

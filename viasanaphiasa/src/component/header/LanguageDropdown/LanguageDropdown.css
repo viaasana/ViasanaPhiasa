@@ -1,7 +1,9 @@
 #language{
     background-color: unset;
     border: #26A2EF;
+    font-size: .875rem;
     option{
+        font-size: .875rem;
         background-color: #26A2EF;
         border: #26A2EF;
     }

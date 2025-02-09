@@ -1,0 +1,7 @@
+.assignments-container{
+    max-width: 81.25rem;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: max-content;
+}

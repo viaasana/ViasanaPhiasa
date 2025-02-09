@@ -4,19 +4,39 @@
     align-items: center;
     height: max-content;
     background-size: cover;
-    
+
+    .list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: flex-start
+
+    }
+
 }
+
 .course::before {
-    content: ""; /* Empty content for the pseudo-element */
-    background-image: url("../../assets/background.png"); /* Same background image */
-    background-size: cover; /* Ensure the image covers the area */
-    filter: grayscale(100%) opacity(50%); /* Apply grayscale and opacity */
+    content: "";
+    /* Empty content for the pseudo-element */
+    background-image: url("../../assets/background.png");
+    /* Same background image */
+    background-size: cover;
+    /* Ensure the image covers the area */
+    filter: grayscale(100%) opacity(50%);
+    /* Apply grayscale and opacity */
 }
 
 .course-container {
-    max-width: 720px;
+    max-width: 81.25rem;
+    min-width: 720px;
     min-height: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 2rem;
     height: max-content;
+
+    .course-Taptitle {
+        color: #586380;
+        font-weight: 600;
+        font-size: 1rem;
+    }
 }

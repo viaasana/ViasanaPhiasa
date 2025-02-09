@@ -1,15 +1,17 @@
 import { useNavigate } from "react-router-dom"
 import { CourseContext } from "../../context/courseContext"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import Loading from "../../component/Loading/Loading"
 
 const LetterLanding = ({lessonName, length, legthDesc, buttonName}) => {
     const navigate = useNavigate()
-    const {courseState} = useContext(CourseContext)
+    const {courseState, setCurentLearn} = useContext(CourseContext)
+
+
     
     const handleStart = ()=>{
-        if(courseState.LetterInstant[0]){
-            navigate(courseState.curentLearn)
+        if(courseState.LetterInstant[0].id){
+            navigate(`./${courseState.LetterInstant[0].id}`)
         }
     }
     if(courseState.isLoading)

@@ -10,7 +10,10 @@ const CourseContextProvider = ({ children }) => {
     const [courseState, dispatch] = useReducer(CourseReducer, {
         isLoading: true,
         colection: [],
-        video: { videoDesc: "", videoUrl: "" }
+        video: { videoUrl: "", videoDesc: "" },
+        image: { imageUrl: "", imageDesc: "" },
+        sound: "",
+        language: "VietNamese",
     })
     const { authState } = useContext(AuthContext)
     //load chapter
@@ -36,6 +39,35 @@ const CourseContextProvider = ({ children }) => {
         }
         else {
             return { success: false, message: "This is private page" }
+        }
+    }
+    //get user list
+    const getUerList = async () => {
+        try {
+            const res = await axios(`${apiUrl}/userAuthRouter/list`)
+            return { success: true, users: res.data.users }
+        } catch (error) {
+            return { success: false, message: error.message }
+        }
+
+    }
+
+    //delete user
+    const deleteUser = async (id) => {
+        setIsLoading(true)
+        try {
+            console.log(id)
+            const res = await axios.delete(`${apiUrl}/userAuthRouter/`, {
+                params: { id }
+            })
+            if (res.data.success) {
+                setIsLoading(false)
+                return { success: true }
+            }
+            setIsLoading(false)
+            return { success: false }
+        } catch {
+            return { success: false }
         }
     }
 
@@ -114,7 +146,7 @@ const CourseContextProvider = ({ children }) => {
             const videoUrl = URL.createObjectURL(videoRes.data)
 
             //get video desc
-            
+
             //get sound
             const soundRes = await axios.get(`${apiUrl}/courses/chapter/${lessonId}/lesson/${letterId}/sound`, {
                 headers: {
@@ -130,7 +162,7 @@ const CourseContextProvider = ({ children }) => {
                     type: "LETTER_DETAIL_LOADED_SUCCESS", payload: [{
                         image: { imageUrl: imageUrl, imageDesc: ImgDescRes.data.description },
                         video: { videoUrl: videoUrl, videoDesc: "videoDesc.data.description" },
-                        sound: {soundUrl: soundUrl}
+                        sound: { soundUrl: soundUrl }
                     }]
                 })
                 return { success: true }
@@ -275,11 +307,103 @@ const CourseContextProvider = ({ children }) => {
         }
     }
 
+    const getGroups = async () => {
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.get(`${apiUrl}/groups`)
+                console.log(response)
+            } catch (error) {
+                console.log(error)
+            }
+    }
+
+    const addTest = async (name) => {
+        if (authState.isAuthenticated) {
+            setIsLoading(true)
+            try {
+                const respnose = await axios.post(`${apiUrl}/courses/assignment/post`, { Vietnamese: name.vi, Khmer: name.km, English: name.en, groupIds: "" })
+                setIsLoading(false)
+                return { success: true, message: respnose.data.message, testId: respnose.data.testId }
+            } catch (error) {
+                setIsLoading(false)
+                return { success: false, message: error.response.data.message }
+            }
+        }
+    }
+
+    const addQuestion = async (testId, content, trueAnswer, falseAnswer1, falseAnswer2, falseAnswer3) => {
+        if (authState.isAuthenticated) {
+            setIsLoading(true)
+            try {
+                const respnose = await axios.post(`${apiUrl}/courses/assignment/${testId}/post`,
+                    { content, trueAnswer, falseAnswer1, falseAnswer2, falseAnswer3 })
+                setIsLoading(false)
+                return { success: true, message: respnose.data.message }
+            } catch (error) {
+                setIsLoading(false)
+                return { success: false, message: error.response.data.message }
+            }
+        }
+    }
+
+    const getTestOverview = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/courses/assignment/`)
+            return { success: true, assignments: response.data.tests }
+        } catch (error) {
+            return { success: false, error }
+        }
+    }
+
+    const getTestById = async (testId) => {
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.get(`${apiUrl}/courses/assignment/${testId}`)
+                return {success: true, message: response.data}
+            } catch (error) {
+                return {success: false, error}
+            }
+    }
+
+    const deleteTest = async (testId) => {
+        if (authState.isAuthenticated)
+            try {
+                const response = await axios.delete(`${apiUrl}/courses/assignment/${testId}`)
+                return {success: true, message: "Assignment delete successfully"}
+            } catch (error) {
+                return {success: false, error}
+            }
+    }
+
     const setIsLoading = (isLoading) => {
         dispatch({ type: "SET_IS_LOADING", payload: isLoading })
     }
 
-    const courseContexData = { courseState, loadChapter, loadLesson, loadLetter, loadDetailLetter, createChapter, createLesson, createLetter, deleteChapter, deleteLesson, deteLetter, setIsLoading, uploadFile }
+
+
+    const courseContexData = {
+        courseState,
+        loadChapter,
+        loadLesson,
+        loadLetter,
+        loadDetailLetter,
+        createChapter,
+        createLesson,
+        createLetter,
+        deleteChapter,
+        deleteLesson,
+        deteLetter,
+        setIsLoading,
+        uploadFile,
+        getUerList,
+        deleteUser,
+        getGroups,
+        addTest,
+        addQuestion,
+        getTestOverview,
+        deleteTest,
+        getTestById
+    }
 
 
     return (

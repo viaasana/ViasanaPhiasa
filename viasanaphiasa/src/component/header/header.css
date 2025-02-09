@@ -1,33 +1,115 @@
 .MyHeader {
     width: 100%;
-    height: 100px;
+    height: 64px;
+    position: sticky;
     background-color: #26A2EF;
     top: 0px;
+    z-index: 9999;
+    ;
     left: 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
 
     h1 {
         color: #ffffff;
-        font-size: 70px;
         padding-left: 40px;
+        font-weight: 700;
         cursor: pointer;
     }
+    
+    /* Container for the form */
+    .s1des7sv {
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 6px;
+        padding: 8px 12px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 0;
+    }
+
+    /* Inner container for form elements */
+    .s14t061d {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* SVG icon */
+    .s1nrkzwy svg {
+        fill: #666;
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+    }
+
+    /* Input container */
+    .slk9g45 {
+        flex-grow: 1;
+    }
+
+    /* Autosuggest container */
+    .react-autosuggest__container {
+        position: relative;
+    }
+
+    /* Input field */
+    .AssemblyInput-input {
+        padding: 10px 12px;
+        border: 0px solid #ccc;
+        border-radius: 6px;
+        outline: none;
+        transition: border-color 0.3s ease;
+        background-color: white;
+        color: #aaa;
+    }
+   
+
+    .AssemblyInput-input:focus {
+        border-color: #007bff;
+    }
+
+    /* Placeholder for the input */
+    .AssemblyInput-placeholder::placeholder {
+        color: #aaa;
+    }
+
+    /* Suggestions container */
+    .react-autosuggest__suggestions-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        border-radius: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+
 
     .navbar {
         overflow: hidden;
         background-color: #ffffff00;
         font-family: Arial;
         padding-right: 20px;
+        font-size: .875rem;
+
         a {
             float: left;
-            font-size: 16px;
+            font-size: .875rem;
             color: white;
             text-align: center;
             padding: 14px 16px;
             text-decoration: none;
+            svg{
+                height: .875rem;
+            }
         }
 
         .dropdown {
@@ -36,8 +118,9 @@
             background-color: #ffffff;
             border-radius: 21px;
             max-width: 100px;
+
             .dropbtn {
-                font-size: 16px;
+                font-size: .875rem;
                 border: none;
                 outline: none;
                 color: #000000;
@@ -64,14 +147,62 @@
                     display: block;
                     text-align: left;
                     cursor: pointer;
+                    font-size: .875rem;
+
+                    
                 }
-                a:hover{
+
+                a:hover {
                     background-color: #ff0000;
                 }
             }
         }
+
         .dropdown:hover .dropdown-content {
             display: block;
-          }
+        }
     }
 }
+
+
+
+
+@media (max-width: 900px) {
+    .MyHeader {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+        position: unset;
+    }
+
+    .MyHeader h1 {
+        padding-left: 0;
+        text-align: center;
+    }
+
+    .s1des7sv {
+        max-width: 100%;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .navbar a {
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+    }
+
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown-content {
+        width: 100%;
+        text-align: center;
+    }
+  }

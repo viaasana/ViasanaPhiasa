@@ -1,0 +1,65 @@
+.SetPreviewCard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.SetPreviewCard:hover {
+    transform: scale(1.02);
+}
+
+.SetPreviewCard-header {
+    margin-bottom: 16px;
+}
+
+.SetPreviewCard-title a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.SetPreviewCard-secondaryMetadata {
+    margin-top: 8px;
+}
+
+.AssemblyPill {
+    background-color: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.AssemblyPillText {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.SetPreviewCard-footer {
+    display: flex;
+    align-items: center;
+}
+
+.UserLink-avatar img {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.UserLink-username {
+    font-size: 0.9em;
+    color: #0073e6;
+}
+
+.UserLink-content {
+    display: flex;
+    align-items: center;
+}

@@ -1,7 +1,6 @@
 import "./DataTap.css"
 import { Routes, Route } from "react-router-dom"
 import ChapterList from "../../../collection/Chapter/ChapterList"
-import CourseContextProvider from "../../../context/courseContext"
 import AddNewChapter from "../../addNewDocument/AddNewChapter"
 import AddNewLesson from "../../addNewDocument/AddnewLesson"
 import LessonList from "../../../collection/Lesson/LessonList"
@@ -13,7 +12,6 @@ import DetailLetter from "../../../collection/DetailLetter/DetailLetter"
 const DataTap = () => {
 
     return (
-        <CourseContextProvider>
             <div className="dataTap">
                 <Routes>
                     <Route path="/" element={<ChapterList />} />
@@ -26,7 +24,6 @@ const DataTap = () => {
                     <Route path="/:chapter/:lesson/:letter/post" element={<AddDetailForm/> } />
                 </Routes>
             </div>
-        </CourseContextProvider>
     )
 }
 

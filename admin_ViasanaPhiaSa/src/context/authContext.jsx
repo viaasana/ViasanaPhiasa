@@ -67,6 +67,7 @@ const AuthContextProvider = ({ children }) => {
         await loadUser()
     }
 
+    
     //register
     const registerUser = async userForm => {
         try {

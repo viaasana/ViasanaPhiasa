@@ -1,6 +1,4 @@
 import "./Course.css"
-import MyFooter from "../../component/footer/MyFooter"
-import MyHeader from "../../component/header/MyHeader"
 import { ProtectedRoute } from "../../component/routing/protectedRoute"
 import { Route, Routes } from "react-router-dom"
 import LessonsRoute from "../Lessons/Lessons"
@@ -14,7 +12,6 @@ const CourseRoute = () => {
     ProtectedRoute()
     return (
         <>
-            <MyHeader />
             <div className="course">
                 <Routes>
                     <Route index  element = {<CourseContainer/>} />
@@ -23,7 +20,6 @@ const CourseRoute = () => {
                     <Route path="*" element={<h1>oop! Page not found.</h1>}/>
                 </Routes>
             </div>
-            <MyFooter />
         </>
     )
 }

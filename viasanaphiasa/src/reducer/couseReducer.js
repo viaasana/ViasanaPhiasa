@@ -27,13 +27,20 @@ export const CourseReducer = (state, action) => {
         case "CHANGE_CURENT_LEARNING":
             return {
                 ...state,
-                curentLearn : payload
+                curentLearn: payload
             }
 
         case "SET_LETTER_INSTANT":
             return {
                 ...state,
                 LetterInstant: payload
+            }
+        case "CLEAR":
+            return {
+                ...state,
+                isLoading: true,
+                video: { videoUrl: "", videoDesc: "" },
+                image: { imageUrl: "", imageDesc: "" }
             }
         default:
             return state

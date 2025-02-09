@@ -6,12 +6,16 @@ import Notification from "./component/notification/Notification"
 import PageNotFound from "./Routes/pageNotfound/notFoundPage"
 import CourseRoute from "./Routes/Courses/Courses"
 import CourseContextProvider from "./context/courseContext"
+import Assignments from "./Routes/Assignments/Assignments"
+import MyHeader from "./component/header/MyHeader"
+import MyFooter from "./component/footer/MyFooter"
 
 function App() {
   return (
     <AuthContextProvider>
       <CourseContextProvider>
         <Router>
+          <MyHeader />
           <Routes>
             <Route exact path="/" Component={Landing} />
             <Route
@@ -32,10 +36,16 @@ function App() {
             />
             <Route
               exact
+              path="/assignments/*"
+              element={<Assignments />}
+            />
+            <Route
+              exact
               path="*"
               element={<PageNotFound />}
             />
           </Routes>
+          <MyFooter />
         </Router>
         <Notification />
       </CourseContextProvider>
