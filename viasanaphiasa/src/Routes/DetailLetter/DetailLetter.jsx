@@ -13,10 +13,11 @@ import { AuthContext } from "../../context/authContext";
 
 const DetailLetter = () => {
     const textError = {
-        VietNamese: "Có lỗi xảy ra khi tải chi tiết bài học",
+        Vietnamese: "Có lỗi xảy ra khi tải chi tiết bài học",
         Khmer: "មិនអាចទទួលបានព័ត៌មានលម្អិត",
         English: "Error occurred when loading lesson details",
     };
+
 
     const { courseState, loadLetter, loadDetailLetter, detailLetterNoVideoAndSound, setCurentLearn, setLetterInstant, clearCouseState } =
         useContext(CourseContext);
@@ -33,7 +34,7 @@ const DetailLetter = () => {
     const [haveData, setHaveData] = useState(false);
     const [detail, setDetail] = useState();
 
-    useEffect(()=>{setHaveData(false)}, [courseState.isLoading])
+    useEffect(() => { setHaveData(false) }, [courseState.isLoading])
 
     // Fetch detailed data when route changes or authentication state updates
     useEffect(() => {
@@ -43,7 +44,7 @@ const DetailLetter = () => {
                 const sortedData = [...courseState.colection].sort((a, b) =>
                     a.createAt.localeCompare(b.createAt)
                 );
-                const LetterInstant = sortedData.map(data => new Letter(data));
+                const LetterInstant = sortedData.map(data => new Letter(data, courseState.language));
                 setLetterInstant(LetterInstant)
             }
             const res = await loadDetailLetter(lessonId, letterId);
@@ -57,20 +58,20 @@ const DetailLetter = () => {
         fetchData();
     }, [authState.isAuthenticated, location]);
 
-    // Fetch additional details without video and sound when language changes
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await detailLetterNoVideoAndSound(lesson, letterId);
-            if (res.success&&courseState.LetterInstant.length) {
-                 setHaveData(true);
-            } else if (!res || res.status != 401) {
-                toast.error(res.message)
-                // toast.error(textError[courseState.language]);
-                // setHaveData(false);
-            }
-        };
-        fetchData();
-    }, [courseState.language]);
+    // // Fetch additional details without video and sound when language changes
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const res = await detailLetterNoVideoAndSound(lesson, letterId);
+    //         if (res.success&&courseState.LetterInstant.length) {
+    //              setHaveData(true);
+    //         } else if (!res || res.status != 401) {
+    //             toast.error(res.message)
+    //             // toast.error(textError[courseState.language]);
+    //             // setHaveData(false);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [courseState.language]);
 
 
     // set new letters list 
@@ -79,20 +80,21 @@ const DetailLetter = () => {
             const sortedData = [...courseState.colection].sort((a, b) =>
                 a.createAt.localeCompare(b.createAt)
             );
-            const LetterInstant = sortedData.map(data => new Letter(data));
+
+            const LetterInstant = sortedData.map(data => new Letter(data, courseState.language));
             setLetterInstant(LetterInstant)
         }
     }, [courseState.colection])
 
     // Update the current learning letter when route changes
     useEffect(() => {
+
         clearCouseState()
         setCurentLearn(letterId);
     }, [location]);
 
     // Create and set the `Letter` instance when data is ready
     useEffect(() => {
-        console.log("have data changed", haveData)
         if (haveData) {
             const doc = {
                 id: letterId,
@@ -100,17 +102,16 @@ const DetailLetter = () => {
                 image: courseState.image,
                 sound: courseState.sound
             };
-            const letterInstant = new Letter(doc);
+            const letterInstant = new Letter(doc, courseState.language);
             setDetail(letterInstant);
         }
     }, [haveData, location, courseState]);
 
 
     // Show a loading indicator if data is not yet available
-    if (courseState.isLoading || !haveData) {
+    if (courseState.isLoading) {
         return <Loading />;
     }
-
     // Render the detail card
     return (
         <div className="detail-container">

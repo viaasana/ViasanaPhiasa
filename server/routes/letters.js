@@ -213,12 +213,7 @@ router.get("/:lessonId", verifyToken, async (req, res) => {
         await Promise.all(
             letters.map(async (letter) => {
                 const name = await textContents.findById(letter.name)
-                if (language == "VietNamese")
-                    dataReturn.push({ id: letter.id, name: name.Vietnamese, lesson: lessonId, createAt: letter.createdAt })
-                else if (language == "Khmer")
-                    dataReturn.push({ id: letter.id, name: name.Khmer, lesson: lessonId, createAt: letter.createdAt })
-                else if (language == "English")
-                    dataReturn.push({ id: letter.id, name: name.English, lesson: lessonId, createAt: letter.createdAt })
+                dataReturn.push({ id: letter.id, name: name, lesson: lessonId, createAt: letter.createdAt })
             })
         )
         return res.status(200).json({ success: true, letters: dataReturn })
@@ -273,14 +268,8 @@ router.get("/:letterId/video", async (req, res) => {
         }
 
         const text2 = await textContents.findById(video.description);
-        let videoDesc;
-        if (language === "VietNamese") {
-            videoDesc = text2.Vietnamese;
-        } else if (language === "Khmer") {
-            videoDesc = text2.Khmer;
-        } else if (language === "English") {
-            videoDesc = text2.English;
-        }
+        const videoDesc = text2
+        
 
         // Stream the video file with range support
         await getFile("video", video.fileId, req, res);
@@ -299,7 +288,6 @@ router.get("/:letterId/image", verifyToken, async (req, res) => {
         return res.status(400).json({ success: false, message: "Letter ID not found" })
     }
     try {
-
         const image = await Image.findOne({ letter: letterId })
         if (!image) {
             return res.status(404).json({ success: false, message: "Image not found" })
@@ -328,16 +316,8 @@ router.get("/:letterId/image/desc", verifyToken, async (req, res) => {
         if (!image)
             return res.status(404).json({ success: false, message: "Image not found" })
         const text = await textContents.findById(image.description)
-        let ImageDsc
-        if (language == "VietNamese") {
-            ImageDsc = text.Vietnamese
-        }
-        else if (language == "Khmer") {
-            ImageDsc = text.Khmer
-        }
-        else if (language == "English") {
-            ImageDsc = text.English
-        }
+        const ImageDsc = text
+        
         return res.status(200).json({ success: true, message: "desc load successfuly", description: ImageDsc })
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message || "An error occurred" })
@@ -383,16 +363,8 @@ router.get("/:letterId/video/desc", verifyToken, async (req, res) => {
         if (!image)
             return res.status(404).json({ success: false, message: "Image not found" })
         const text = await textContents.findById(image.description)
-        let ImageDsc
-        if (language == "VietNamese") {
-            ImageDsc = text.Vietnamese
-        }
-        else if (language == "Khmer") {
-            ImageDsc = text.Khmer
-        }
-        else if (language == "English") {
-            ImageDsc = text.English
-        }
+        const ImageDsc = text
+
         return res.status(200).json({ success: true, message: "desc load successfuly", description: ImageDsc })
     } catch (error) {
         return res.status(400).json({ success: false, message: error.message || "An error occurred" })

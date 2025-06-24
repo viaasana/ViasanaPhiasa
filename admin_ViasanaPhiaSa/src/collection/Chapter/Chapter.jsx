@@ -14,11 +14,11 @@ export default class Chapter{
 
     openLesson(){
         this.setIsLoading(true)
-        this.navigateFnc(`${this.id}name=${this.name}`)
+        this.navigateFnc(`${this.id}name=${this.name.English}`)
     }
 
     renderCard(index){
-        const data = {id:this.id, name:this.name, status:this.lessonCount}
+        const data = {id:this.id, name:this.name.English, status:this.lessonCount}
         return (
             <Card key={index|| this.id} 
                     type = "Chapter"

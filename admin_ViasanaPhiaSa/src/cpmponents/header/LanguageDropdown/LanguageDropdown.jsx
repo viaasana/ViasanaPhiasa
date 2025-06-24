@@ -17,7 +17,7 @@ const LanguageDropdown = () => {
       <select id="language" value={courseState.language} onChange={handleChange}>
         <option value="English">English</option>
         <option value="Khmer">ភាសាខ្មែរ</option>
-        <option value="VietNamese">Tiếng Việt</option>
+        <option value="Vietnamese">Tiếng Việt</option>
       </select>
     </a>
   );

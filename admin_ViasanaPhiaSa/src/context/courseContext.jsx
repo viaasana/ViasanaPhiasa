@@ -13,7 +13,7 @@ const CourseContextProvider = ({ children }) => {
         video: { videoUrl: "", videoDesc: "" },
         image: { imageUrl: "", imageDesc: "" },
         sound: "",
-        language: "VietNamese",
+        language: "Vietnamese",
     })
     const { authState } = useContext(AuthContext)
     //load chapter
@@ -22,7 +22,7 @@ const CourseContextProvider = ({ children }) => {
             try {
                 const response = await axios.get(`${apiUrl}/courses/`, {
                     params: {
-                        language: "VietNamese"
+                        language: "Vietnamese"
                     },
                     headers: {
                         'Content-Type': 'application/json',

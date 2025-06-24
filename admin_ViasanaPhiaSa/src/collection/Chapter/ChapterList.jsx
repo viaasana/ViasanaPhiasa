@@ -18,33 +18,33 @@ const ChapterList = () => {
     useEffect(() => {
         const fetchData = async () => {
             await loadChapter();
-            const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name));
+            const sortedData = [...courseState.colection].sort((a, b) => a.name.English.localeCompare(b.name));
             const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
             setChapters(chapterInstances);
         };
 
         fetchData();
 
-        // if (Chapters[0]) {
-        //     const curentColectionName = Chapters[0].name.split(' ')[0]
-        //     if (curentColectionName != "Chapter") {
-        //         setInPageLoading(true)
-        //         setCorectColectionName(0)
-        //     }
-        //     else {
-        //         setCorectColectionName(corectColectionName + 1)
-        //         if (corectColectionName >= 10) {
-        //             setInPageLoading(false)
-        //             setCorectColectionName(10)
-        //         }
-        //     }
-        // }else{
-        //     setInPageLoading(true)
-        // }
+        if (Chapters[0]) {
+            const curentColectionName = Chapters[0].name.English.split(' ')[0]
+            if (curentColectionName != "Chapter") {
+                setInPageLoading(true)
+                setCorectColectionName(0)
+            }
+            else {
+                setCorectColectionName(corectColectionName + 1)
+                if (corectColectionName >= 10) {
+                    setInPageLoading(false)
+                    setCorectColectionName(10)
+                }
+            }
+        }else{
+            setInPageLoading(true)
+        }
     }, [courseState.isLoading, authState]);
     
 
-    if (courseState.isLoading || inPageLoading)
+    if (courseState.isLoading)
         return <Loading />;
 
     return (

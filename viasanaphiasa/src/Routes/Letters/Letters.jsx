@@ -9,8 +9,8 @@ import Controller from "./controller";
 import DetailLetter from "../DetailLetter/DetailLetter";
 
 const LetterRoute = () => {
-    const textButton = { VietNamese: "Bắt đầu học", Khmer: "ចាប់ផ្តើម", English: "Start" };
-    const textInfor = { VietNamese: "Chữ", Khmer: "អក្សរ", English: "Letter" };
+    const textButton = { Vietnamese: "Bắt đầu học", Khmer: "ចាប់ផ្តើម", English: "Start" };
+    const textInfor = { Vietnamese: "Chữ", Khmer: "អក្សរ", English: "Letter" };
 
     const { courseState, loadLetter, setCurentLearn, setLetterInstant } = useContext(CourseContext);
     const { authState } = useContext(AuthContext);
@@ -22,7 +22,6 @@ const LetterRoute = () => {
     const location = useLocation()
 
 
-    const [Chapters, setChapters] = useState([]);
     const [curent, setCurent] = useState("");
 
     // Fetch letters when language or authState changes
@@ -39,10 +38,8 @@ const LetterRoute = () => {
             const sortedData = [...courseState.colection].sort((a, b) =>
                 a.createAt.localeCompare(b.createAt)
             );
-            const LetterInstant = sortedData.map(data => new Letter(data));
-            setChapters(LetterInstant);
+            const LetterInstant = sortedData.map(data => new Letter(data, courseState.language));
             setLetterInstant(LetterInstant)
-
         }
     }, [courseState.colection]);
 

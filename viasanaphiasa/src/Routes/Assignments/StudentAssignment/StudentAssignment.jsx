@@ -47,8 +47,8 @@ const StudentAssignment = () => {
         setLoading(true);
         const res = await getTestById(AssignmentId);
         const isSubmited = await checkIfAssignmentSubmited(AssignmentId);
+        
         setSubmitted(isSubmited.AssignmentSubmitted);
-        console.log(isSubmited)
         if (isSubmited.AssignmentSubmitted) {
             setAnswers(isSubmited.userAnswers);
             setTrueAnswers(isSubmited.trueAnswers);
@@ -57,7 +57,7 @@ const StudentAssignment = () => {
 
         if (res.success) {
             setAssignment({
-                ...res.message,
+                nameRes: res.message.nameRes,
                 questions: res.message.questions.map(q => shuffleAnswers(q))
             });
         } else {
@@ -66,7 +66,9 @@ const StudentAssignment = () => {
         setLoading(false);
     };
 
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const handleSelect = (questionId, answerId) => {
         setAnswers(prev => ({ ...prev, [questionId]: answerId }));
@@ -86,12 +88,17 @@ const StudentAssignment = () => {
         setLoading(false);
     };
 
+    useEffect(() => {
+        console.log("Updated assignment:", assignment);
+    }, [assignment]);  // Runs when `assignment` updates
+    
+
     const convertNumerals = (num, language) => {
         const khmerDigits = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
         return (language === "Khmer" || language === "km") ? num.toString().split('').map(digit => khmerDigits[digit]).join('') : num;
     };
 
-    if (loading) return <Loading />;
+    if (loading || !assignment) return <Loading />;
 
     return (
         <div className="StudentAssignment-container">

@@ -83,7 +83,6 @@ const CourseContextProvider = ({ children }) => {
                     }
                 })
                 if (response.data.success) {
-
                     dispatch({ type: "COURSE_LOADED_SUCCESS", payload: response.data.letters })
                 }
             } catch (error) {
@@ -300,12 +299,11 @@ const CourseContextProvider = ({ children }) => {
 
     //handel change curent learn
     const setCurentLearn = (newCurent) => {
-
+        setIsLoading(true)
         dispatch({ type: "CHANGE_CURENT_LEARNING", payload: newCurent })
     }
 
     const getIndex = () => {
-        console.log(courseState.LetterInstant)
         return courseState.LetterInstant.findIndex((item) => item.id == courseState.curentLearn)
     }
 
@@ -333,33 +331,31 @@ const CourseContextProvider = ({ children }) => {
 
 
     const getTestById = async (testId) => {
-        if (authState.isAuthenticated)
-            try {
-                const response = await axios.get(`${apiUrl}/courses/assignment/user/${testId}`)
-                return { success: true, message: response.data }
-            } catch (error) {
-                return { success: false, error }
-            }
+        try {
+            const response = await axios.get(`${apiUrl}/courses/assignment/user/${testId}`)
+            return { success: true, message: response.data }
+        } catch (error) {
+            return { success: false, error }
+        }
     }
 
     const checkIfAssignmentSubmited = async (testId) => {
-        if (authState.isAuthenticated)
-            try {
-                const response = await axios.get(`${apiUrl}/courses/assignment/SubmitAssignmnet/${testId}`);
-                return {AssignmentSubmitted: response.data.AssignmentSubmitted,trueAnswers: response.data.trueAnswers ,userAnswers:  response.data.userAnswers,score: response.data.score}
-            }catch(error){
-                return error
-            }
+        try {
+            const response = await axios.get(`${apiUrl}/courses/assignment/SubmitAssignmnet/${testId}`);
+            return { AssignmentSubmitted: response.data.AssignmentSubmitted, trueAnswers: response.data.trueAnswers, userAnswers: response.data.userAnswers, score: response.data.score }
+        } catch (error) {
+            return error
+        }
     }
 
-    const submitAnswer = async(testId, answers)=>{
+    const submitAnswer = async (testId, answers) => {
         if (authState.isAuthenticated)
             try {
                 const response = await axios.post(`${apiUrl}/courses/assignment/SubmitAssignmnet/${testId}`, { answers });
-        
-                if(response.data.success)
-                    return {success: true, message: "Anssignment submited"}
-            }catch(error){
+
+                if (response.data.success)
+                    return { success: true, message: "Anssignment submited" }
+            } catch (error) {
                 return error
             }
     }

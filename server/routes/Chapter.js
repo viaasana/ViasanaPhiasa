@@ -26,12 +26,7 @@ router.get("/", verifyToken, async (req, res) => {
         await Promise.all(
             chapters.map(async (chapter) => {
                 const name = await textContents.findById(chapter.name)
-                if (language == "Vietnamese")
-                    dataReturn.push({ id: chapter.id, name: name.Vietnamese, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
-                else if (language == "Khmer")
-                    dataReturn.push({ id: chapter.id, name: name.Khmer, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
-                else if (language == "English")
-                    dataReturn.push({ id: chapter.id, name: name.English, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
+                dataReturn.push({ id: chapter.id, name: name, lessonCout: chapter.lessonCount, createAt: chapter.createdAt })
             })
         )
         return res.status(200).json({ success: true, chapters: dataReturn })

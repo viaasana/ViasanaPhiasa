@@ -7,7 +7,7 @@ const LetterCard = ({ data }) => {
     const image = data.image
     const { videoUrl, videoDesc } = video
     const { imageUrl, imageDesc } = image
-
+    const language = data.language
 
     return (
         <div className="Letter-card-container">
@@ -18,12 +18,12 @@ const LetterCard = ({ data }) => {
                         <source src={videoUrl} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
-                    <span>{videoDesc}</span>
+                    <span>{videoDesc[language]}</span>
                     <audio src=""></audio>
                 </div>
                 <div className="image-container">
                     <img src={imageUrl} alt="" />
-                    <span>{imageDesc}</span>
+                    <span>{imageDesc[language]}</span>
                 </div>
             </div>
         </div>

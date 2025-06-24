@@ -17,7 +17,7 @@ const LessonList = () => {
     useEffect(() => {
         const fethData = async () => {
             await loadLesson(chapterId)
-            const sortedData = [...courseState.colection].sort((a, b) => a.name.localeCompare(b.name))
+            const sortedData = [...courseState.colection].sort((a, b) => a.name.English.localeCompare(b.name))
             const lessonInstances = sortedData.map(data => new Lesson(data, navigate, setIsLoading))
             setLessons(lessonInstances)
         }
@@ -25,7 +25,7 @@ const LessonList = () => {
         fethData()
 
         if (lessons[0]) {
-            const curentColectionName = lessons[0].name.split(' ')[0] || "Lesson"
+            const curentColectionName = lessons[0].name.English.split(' ')[0] || "Lesson"
             if (curentColectionName != "Lesson") {
                 setInPageLoading(true)
                 setCorectColectionName(0)

@@ -25,7 +25,7 @@ const LetterList = ()=>{
         }
         fetchData()
         if (letters[0]) {
-            const curentColectionName = letters[0].name.split(' ')[0]
+            const curentColectionName = letters[0].name.English.split(' ')[0]
             if (curentColectionName != "Letter") {
                 setInPageLoading(true)
                 setCorectColectionName(0)

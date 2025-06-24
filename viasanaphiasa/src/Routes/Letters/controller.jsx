@@ -14,33 +14,26 @@ const Controller = () => {
     const [nextButtonDisable, setNextButtonDisable] = useState((state >= length) ? true : false)
     const [prevButtonDisable, setPrevButtonDisable] = useState((state == 0) ? true : false)
     const navigate = useNavigate()
-    const location = useLocation()
 
     useEffect(() => {
-        console.log("curent learn:", courseState.curentLearn)
         const currentIndex = getIndex()
-        console.log("curent index: ", currentIndex)
         setState(currentIndex)
         setLength(courseState.LetterInstant ? courseState.LetterInstant.length : 0)
         setNotYetLearnState(length - state)
         setNextButtonDisable((state >= length-1) ? true : false)
         setPrevButtonDisable((state <= 0) ? true : false)
-        console.log(state, courseState.curentLearn, courseState.LetterInstant)
     }, [courseState.curentLearn, courseState.LetterInstant])
 
     const handleNext = () => {
         setIsLoading(true)
+        console.log(courseState.curentLearn)
+        console.log(courseState.LetterInstant)
         const nextState = courseState.LetterInstant[state + 1]
-        // console.log("Go to:", nextState.id)
-        // console.log("state: ", state+1)
-        // console.log("Letter Instant: ", courseState.LetterInstant)
         navigate(`./${nextState.id}`)
     }
     const handlePrev = () => {
         setIsLoading(true)
-        //setCurentLearn(courseState.LetterInstant[state - 1])
         const prevState = courseState.LetterInstant[state - 1]
-        //console.log("Go to:", prevState.id)
         navigate(`./${prevState.id}`)
     }
 
@@ -51,7 +44,7 @@ const Controller = () => {
                     <PrevIcon disable={prevButtonDisable} />
                 </div>
                 <div className="buttonBox nameButton">
-                    {(courseState.LetterInstant[state]) && <span>{courseState.LetterInstant[state].name}</span>}
+                    {(courseState.LetterInstant[state]) && <span>{courseState.LetterInstant[state].name[courseState.language]}</span>}
                 </div>
                 <div className="buttonBox speakerButton">
                     <Speaker audioSrc={courseState.sound} />

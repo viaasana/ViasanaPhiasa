@@ -33,7 +33,7 @@ const PageNotFound = () => {
                 <img className="not-found-img" src={PageNotFoundIMG} alt="Page Not Found" />
                 <h1>{translations[courseState.language]?.title || "Page Not Found"}</h1>
                 <p>{translations[courseState.language]?.message || "Sorry, this page is unavailable."}</p>
-                <button className="back-btn" onClick={() => navigate("/")}>
+                <button className="back-btn" onClick={() => navigate("/course")}>
                     {translations[courseState.language]?.back || "Go Back Home"}
                 </button>
             </div>

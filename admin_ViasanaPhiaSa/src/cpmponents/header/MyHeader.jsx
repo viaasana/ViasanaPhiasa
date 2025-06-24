@@ -5,26 +5,31 @@ import { CourseContext } from "../../context/courseContext"
 import { useNavigate } from "react-router-dom"
 import LanguageDropdown from "./LanguageDropdown/LanguageDropdown"
 
-
 const MyHeader = () => {
     const TEXT = {
-        VietNamese: {
+        Vietnamese: {
             a1: " Thông Báo",
             a2: " Hỗ Trợ",
+            search: "Tìm kiếm",
+            assignment: "Bài Tập" // New text for the assignment button
         },
         Khmer: {
             a1: " សេចក្តីជូនដំណឹង",
             a2: " គាំទ្រ",
+            search: "ស្វែងរក",
+            assignment: "កិច្ចការ" // New text for the assignment button
         },
         English: {
             a1: " Notification",
-            a2: " Help"
+            a2: " Help",
+            search: "Search",
+            assignment: "Assignment" // New text for the assignment button
         }
     }
     const navigate = useNavigate()
     const { authState, logout } = useContext(AuthContext)
     const { courseState } = useContext(CourseContext)
-    const [text, setText] = useState(TEXT.VietNamese)
+    const [text, setText] = useState(TEXT.Vietnamese)
 
     useEffect(() => {
         setText(TEXT[courseState.language])
@@ -39,6 +44,9 @@ const MyHeader = () => {
     }
     const backHome = () => {
         navigate("/course")
+    }
+    const goToAssignment = () => {
+        navigate("/assignment") // Navigate to the assignment page
     }
 
     const FindingForm = () => {
@@ -73,7 +81,7 @@ const MyHeader = () => {
                                             className="AssemblyInput-input AssemblyInput-placeholder"
                                             id="GlobalSearchBar"
                                             aria-label="Tìm kiếm"
-                                            placeholder="Tìm kiếm bài kiểm tra thử"
+                                            placeholder={text.search}
                                             type="text"
                                             defaultValue=""
                                         />
@@ -91,10 +99,8 @@ const MyHeader = () => {
                     </div>
                 </div>
             </form>
-
         )
     }
-
 
     const UserButton = () => {
         if (authState.isAuthenticated)
@@ -119,14 +125,11 @@ const MyHeader = () => {
         )
     }
 
-
     return (
         <div className="MyHeader">
             <h1 onClick={backHome}>វាសនាភាសា</h1>
             <a className="formContainer"><FindingForm /></a>
             <div className="navbar">
-
-
                 <a href="#home" >
                     <svg height={".875rem"} fill="white" viewBox="3 2.5 14 14" x="0" y="0" class="shopee-svg-icon icon-notification-2"><path d="m17 15.6-.6-1.2-.6-1.2v-7.3c0-.2 0-.4-.1-.6-.3-1.2-1.4-2.2-2.7-2.2h-1c-.3-.7-1.1-1.2-2.1-1.2s-1.8.5-2.1 1.3h-.8c-1.5 0-2.8 1.2-2.8 2.7v7.2l-1.2 2.5-.2.4h14.4zm-12.2-.8.1-.2.5-1v-.1-7.6c0-.8.7-1.5 1.5-1.5h6.1c.8 0 1.5.7 1.5 1.5v7.5.1l.6 1.2h-10.3z"></path><path d="m10 18c1 0 1.9-.6 2.3-1.4h-4.6c.4.9 1.3 1.4 2.3 1.4z"></path></svg>
                     {text.a1}

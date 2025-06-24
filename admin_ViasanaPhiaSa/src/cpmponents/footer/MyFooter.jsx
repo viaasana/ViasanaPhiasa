@@ -77,8 +77,8 @@ const MyFooter = () => {
                 </div>
                 <div class="footer-section contact">
                     <h3>Contact Us | Liên Hệ | ទំនាក់ទំនង</h3>
-                    <p>Email: 23520966@gm.uit.edu.vn</p>
-                    <p>Phone: 0867-474-032</p>
+                    <p>Email: support@learningsite.com</p>
+                    <p>Phone: +123-456-7890</p>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -100,7 +100,6 @@ const MyFooter = () => {
                         </svg>
                     </a>
                 </div>
-
             </div>
         </footer>
 

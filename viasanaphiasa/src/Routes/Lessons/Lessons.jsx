@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/authContext"
 import SetPreview from "../../component/EventSlide/EventSlideMain"
 
 const LessonsRoute = () => {
-    const Taptitle_text = { VietNamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
+    const Taptitle_text = { Vietnamese: "Các phần học: ", Khmer: "ផ្នែកសិក្សា៖", English: "Study sections:" }
     const { courseState, loadLesson, setIsLoading } = useContext(CourseContext);
     const {authState} = useContext(AuthContext)
     const [Chapters, setChapters] = useState([]);
@@ -16,7 +16,7 @@ const LessonsRoute = () => {
     const {chapter} = useParams()
     const [chapterId, chapterName] = chapter.split("name=")
     const location = useLocation()
-    const TapEventTiltle = {VietNamese: "Các sự kiện đặc biệt: ", Khmer: "ព្រឹត្តិការណ៍ពិសេស៖", English: "Special event:" }
+    const TapEventTiltle = {Vietnamese: "Các sự kiện đặc biệt: ", Khmer: "ព្រឹត្តិការណ៍ពិសេស៖", English: "Special event:" }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +28,7 @@ const LessonsRoute = () => {
     
     useEffect(() => {
         const sortedData = [...courseState.colection].sort((a, b) => a.createAt.localeCompare(b.createAt));
-        const chapterInstances = sortedData.map(data => new Lesson(data, navigate, setIsLoading));
+        const chapterInstances = sortedData.map(data => new Lesson(data, navigate, setIsLoading, courseState.language));
         setChapters(chapterInstances);
     }, [courseState.colection]);
 

@@ -1,10 +1,10 @@
 #language{
-  background-color: unset;
-  border: #26A2EF;
-  font-size: 16px;
-  option{
-      font-size: 16px;
-      background-color: #26A2EF;
-      border: #26A2EF;
-  }
+    background-color: unset;
+    border: #26A2EF;
+    font-size: .875rem;
+    option{
+        font-size: .875rem;
+        background-color: #26A2EF;
+        border: #26A2EF;
+    }
 }

@@ -25,7 +25,7 @@ const CourseContainer = () => {
     
     useEffect(() => {
         const sortedData = [...courseState.colection].sort((a, b) => a.createAt.localeCompare(b.createAt)); 
-        const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading));
+        const chapterInstances = sortedData.map(data => new Chapter(data, navigate, setIsLoading, courseState.language));
         setChapters(chapterInstances);
     }, [courseState.colection]);
     

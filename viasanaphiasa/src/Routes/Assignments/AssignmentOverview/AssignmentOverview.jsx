@@ -39,12 +39,8 @@ const AssignmentOverview = () => {
         fetchData();
     }, []);
 
-    const handleAction = (testId, isSubmitted) => {
-        if (isSubmitted) {
-            navigate(testId); // Navigate to view assignment
-        } else {
-            navigate(`/do-assignment/${testId}`); // Navigate to do assignment
-        }
+    const handleAction = (testId) => {
+        navigate(testId);
     };
 
     if (loading) return <p>Loading assignments...</p>;
@@ -84,7 +80,7 @@ const AssignmentOverview = () => {
                                         <td>
                                             <button 
                                                 className={`btn ${isSubmitted ? "btn-view" : "btn-do"}`} 
-                                                onClick={() => handleAction(assignment.id, isSubmitted)}
+                                                onClick={() => handleAction(assignment.id)}
                                             >
                                                 {isSubmitted 
                                                     ? buttonText.view[courseState.language] 

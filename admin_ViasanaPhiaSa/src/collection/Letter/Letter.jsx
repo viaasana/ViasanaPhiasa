@@ -14,10 +14,10 @@ export default class Letter{
 
     openDetail(){
         this.setIsLoading(true)
-        this.navigateFnc(`${this.id}name=${this.name}`)
+        this.navigateFnc(`${this.id}name=${this.name.English}`)
     }
     renderCard(index){
-        const data = {id: this.id, name: this.name, lessonId: this.lesson}
+        const data = {id: this.id, name: this.name.English, lessonId: this.lesson}
         return (
             <Card key={index|| this.id} 
                     type = "Letter"

@@ -7,7 +7,6 @@ const LetterLanding = ({lessonName, length, legthDesc, buttonName}) => {
     const navigate = useNavigate()
     const {courseState, setCurentLearn} = useContext(CourseContext)
 
-
     
     const handleStart = ()=>{
         if(courseState.LetterInstant[0].id){
